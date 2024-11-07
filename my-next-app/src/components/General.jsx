@@ -21,14 +21,14 @@ export default function General() {
     return (
         <section className="pb-8 pt-16 px-20 flex flex-col">
             {items.map((item, index) => (
-                <Item key={index} title={item.title} options={item.options} />
+                <GeneralItem key={index} title={item.title} options={item.options} />
             ))}
             <button className=" absolute bottom-[20%] bg-green py-2 px-5 mb-2 w-[15%] text-[40px] text-bText rounded-[21px] hover:shadow-custom-inset transition-shadow duration-200  self-end ">Save</button>
         </section>
     );
 }
 
-function Item({ title, options }) {
+export function GeneralItem({ title, options }) {
     return (
         <div className=" relative flex w-full items-center mb-9">
             <p className=" w-1/2 text-4xl">{title}</p>
@@ -39,7 +39,7 @@ function Item({ title, options }) {
                     </option>
                 ))}
             </select>
-            <span className=" right-0 absolute flex h-[90%] w-14 bg-[#708360] rounded-[21px] justify-center pointer-events-none cursor-pointer" ><Image src={arrow}></Image></span>
+            <span className=" right-0 absolute flex h-[90%] w-14 bg-[#708360] rounded-[21px] justify-center pointer-events-none cursor-pointer" ><Image src={arrow} alt="img"></Image></span>
         </div>
     );
 }
