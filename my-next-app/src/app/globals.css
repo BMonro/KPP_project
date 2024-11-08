@@ -35,3 +35,33 @@ body {
   border-radius: 10px;
   border: 2px solid #F1DACE; /* Округлення та відступ */
 }
+
+
+/*Елементи симуляції
+.table1 {
+  bottom: 50px;
+  left: 30px;
+  width: 100px;
+  height: 100px;
+  background-image: url('/src/app/simulation/images/Table1.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.table2 {
+  bottom: 50px;
+  left: 30px;
+  width: 100px;
+  height: 100px;
+  background-image: url('/src/app/simulation/images/Table2.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}*/
+
+.simulation {
+  display: flex;
+  justify-content: flex-start; /* Розміщує елементи зліва */
+  padding: 20px; /* Відступи від країв контейнера */
+}
