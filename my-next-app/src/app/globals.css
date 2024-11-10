@@ -37,31 +37,49 @@ body {
 }
 
 
-/*Елементи симуляції
-.table1 {
-  bottom: 50px;
-  left: 30px;
-  width: 100px;
-  height: 100px;
-  background-image: url('/src/app/simulation/images/Table1.png');
+.simulation {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  gap: 20px; /* Відстань між столиками */
+  padding: 20px;
+}
+
+.simulation-background {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: auto;
+  gap: 20px;
+  padding: 20px;
+  background-color: #f1f1f1; /* Колір фону для симуляції */
+  height: 100vh;
+}
+
+/* Стилі для столиків */
+.table {
+  width: 100%;
+  height: 30%; /* Висота столика */
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
 }
 
-.table2 {
-  bottom: 50px;
-  left: 30px;
-  width: 100px;
-  height: 100px;
-  background-image: url('/src/app/simulation/images/Table2.png');
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
-}*/
+/* Імпортуємо зображення для кожного столика */
+.table1 {
+  background-image: url('/simulation/images/Table1.png');
+}
 
-.simulation {
-  display: flex;
-  justify-content: flex-start; /* Розміщує елементи зліва */
-  padding: 20px; /* Відступи від країв контейнера */
+.table2 {
+  background-image: url('/simulation/images/Table2.png');
+}
+
+.table3 {
+  background-image: url('/simulation/images/Table4.png');
+}
+
+/* Столик 4 розміщується під першими трьома столиками */
+.table4 {
+  grid-column: 1 / -1;
+  justify-self: center;
+  background-image: url('/simulation/images/Table3.png');
 }
