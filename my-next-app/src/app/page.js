@@ -11,7 +11,7 @@ export default function Home() {
       <Link href={'/simulation'} className="w-1/3 h-[114px] rounded-[21px] text-bText bg-green text-6xl flex items-center justify-center">
         START
       </Link>
-      <Link href={`/settings`} className=" bg-green py-1 px-5 rounded-[21px] absolute top-[100px] right-5"><Image src={geer}/></Link>
+      <Link href={`/settings`} className=" bg-green py-1 px-5 rounded-[21px] absolute top-[100px] right-5"><Image src={geer} alt="img"/></Link>
     </div>
   );
 }

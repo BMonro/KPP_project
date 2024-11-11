@@ -6,17 +6,103 @@ import logo from "/public/logo.svg"
 import house from "/public/house.svg"
 import CustomButton from "@/components/CustomButton";
 import General from "@/components/General";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import Strategy from "@/components/Strategy";
 import Menu from "@/components/Menu";
+import pizza from "/public/pizza.svg";
+import cola from "/public/cola.svg";
+import soda from "/public/soda.svg";
+import juice from "/public/juice.svg";
+
+const initialPizzas = [
+    {
+        title: "Greek pizza",
+        time: "20 minutes",
+        money: "8",
+        img: pizza
+    },
+    {
+        title: "Neapolitan pizza",
+        time: "25 minutes",
+        money: "10",
+        img: pizza
+    },
+    {
+        title: "Greek pizza",
+        time: "20 minutes",
+        money: "8",
+        img: pizza
+    },
+    {
+        title: "Greek pizza",
+        time: "20 minutes",
+        money: "8",
+        img: pizza
+    },
+    {
+        title: "Greek pizza",
+        time: "20 minutes",
+        money: "8",
+        img: pizza
+    },
+];
+
+const initialDrinks = [
+    {
+        title: "Strawberry soda",
+        time: null,
+        money: "4",
+        img: soda
+    },
+    {
+        title: "Coca - cola",
+        time: null,
+        money: "2",
+        img: cola
+    },
+    {
+        title: "Orange juice",
+        time: null,
+        money: "3",
+        img: juice
+    },
+   
+];
+
 export default function Settings() {
     const [selectedSection, setSelectedSection] = useState("GENERAL");
+    const [currentPizzas, setCurrentPizzas] = useState(initialPizzas);
+    const [currentDrinks, setCurrentDrinks] = useState(initialDrinks);
+    const [currentType, setCurrentType] = useState("Pizzas");
+
+    useEffect(() => {
+        const savedPizzas = localStorage.getItem('Pizzas');
+        const savedDrinks = localStorage.getItem('Drinks');
+        
+        if (savedPizzas) setCurrentPizzas(JSON.parse(savedPizzas));
+        if (savedDrinks) setCurrentDrinks(JSON.parse(savedDrinks));
+    }, []);
+
+    useEffect(() => {
+        localStorage.setItem('Pizzas', JSON.stringify(currentPizzas));
+    }, [currentPizzas]);
+
+    useEffect(() => {
+        localStorage.setItem('Drinks', JSON.stringify(currentDrinks));
+    }, [currentDrinks]);
+
 
     function handleSection( section ) {
         setSelectedSection( currentSection => {
             return currentSection = section;
         })
+    }
+    function handleSelectMenu( type ) {
+        setCurrentType( currentType => {
+            return currentType = type;
+        })
+
     }
 
     return (
@@ -24,10 +110,19 @@ export default function Settings() {
         <Header />
         <div className="h-full relative bg-mainBg flex  ">
             <aside className="bg-bgGreen h-full w-[27%] flex flex-col items-center justify-start px-7 ">
-                {selectedSection != "MENU" ? <Image className=" transform scale-[0.8] " src={logo} alt="img"/> : <div className="py-6"></div>}
+            <Image className=" transform scale-[0.8] " src={logo} alt="img"/>
                 <CustomButton handleSection={handleSection} text="GENERAL"></CustomButton>
                 <CustomButton handleSection={handleSection}  text="STRATEGY"></CustomButton>
-                <CustomButton handleSection={handleSection}  text="MENU"></CustomButton>
+                {selectedSection != "MENU" 
+                ? <CustomButton handleSection={handleSection}  text="MENU"></CustomButton> 
+                :   <div onClick={() => handleSection("MENU")} className=" flex flex-col items-center  bg-green py-2 px-5 mb-2 w-[100%] text-[40px] text-bText rounded-[21px] hover:shadow-custom-inset transition-shadow duration-200 ">
+                        <p>MENU</p>
+                        <span className="  bg-[#617451] w-full h-[5px] mb-1"></span>
+                        <button className="text-[25px] self-start pl-2 text-[#FFF2EB]" onClick={() => handleSelectMenu("Pizzas")}>-- Pizza</button>
+                        <button className="text-[25px] self-start pl-2 text-[#FFF2EB]" onClick={() => handleSelectMenu("Drinks")}>-- Drinks</button>
+                    </div>}
+
+                
                 <Link href={"/"} className=" bg-green py-2 px-5 mb-2 w-[100%] text-[40px] text-black rounded-[21px] flex justify-center hover:shadow-custom-inset transition-shadow duration-200">
                     <Image className=" mr-2" src={house} alt="img"></Image>
                     <p>HOME</p>
@@ -36,7 +131,7 @@ export default function Settings() {
             <main className="w-full">
                 {selectedSection == "GENERAL" ?  <General/> : <></>}
                 {selectedSection == "STRATEGY" ?  <Strategy/> : <></>}
-                {selectedSection == "MENU" ?  <Menu/> : <></>}
+                {selectedSection == "MENU" ?  <Menu items={currentType === "Pizzas" ? currentPizzas : currentDrinks} setItems={currentType === "Pizzas" ? setCurrentPizzas : setCurrentDrinks} currentType={currentType}/> : <></>}
             </main>
         </div>
         </div> 
