@@ -28,9 +28,9 @@ const Dialog = forwardRef(({ isDialogOpen, setIsDialogOpen, handleAddItem, curre
         }
 
         const item = {
-            title: nameValue,
+            name: nameValue,
             time: timeValue,
-            money: priceValue,
+            price: priceValue,
             img: img
         }
         handleAddItem(item)
