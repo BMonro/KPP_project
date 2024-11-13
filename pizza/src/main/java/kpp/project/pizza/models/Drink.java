@@ -2,15 +2,46 @@ package kpp.project.pizza.models;
 
 public class Drink implements Cloneable {
     // Поле для зберігання назви
-    public String name;
+    private String name;
 
     // Поле для зберігання розміру
-    public String size;
+    private String size;
 
     // Поле для зберігання ціни
-    public double price;
+    private double price;
+
+    // Геттер для назви
+    public String getName() {
+        return name;
+    }
+
+    // Сетер для назви
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // Геттер для розміру
+    public String getSize() {
+        return size;
+    }
+
+    // Сетер для розміру
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    // Геттер для ціни
+    public double getPrice() {
+        return price;
+    }
+
+    // Сетер для ціни
+    public void setPrice(double price) {
+        this.price = price;
+    }
 
     // Метод для клонування об'єкта
+    @Override
     public Drink clone() {
         try {
             return (Drink) super.clone();

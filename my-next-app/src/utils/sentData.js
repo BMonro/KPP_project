@@ -1,7 +1,7 @@
 export const sendDataToBackend = async (data) => {
     try {
         if (Object.keys(data).length > 0) {
-            fetch('http://your-spring-server-url/endpoint', {
+            fetch('http://localhost:8080/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
