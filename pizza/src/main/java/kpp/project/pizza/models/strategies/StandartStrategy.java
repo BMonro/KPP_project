@@ -7,7 +7,7 @@ public class StandartStrategy implements IPizzaStrategy {
     public Pizzeria createPizzeria() {
         // Логіка для створення піцерії за стандартною стратегією
         System.out.println("Створення піцерії за стандартною стратегією.");
-        return new Pizzeria(); // Повертає новий об'єкт Pizzeria
+        return null; // Повертає новий об'єкт Pizzeria
     }
 
     @Override

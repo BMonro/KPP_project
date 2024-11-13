@@ -7,7 +7,7 @@ public class RushHourStrategy implements IPizzaStrategy {
     public Pizzeria createPizzeria() {
         // Логіка для створення піцерії у час пік
         System.out.println("Створення піцерії з врахуванням часу пік.");
-        return new Pizzeria(); // Повертає новий об'єкт Pizzeria
+        return null; // Повертає новий об'єкт Pizzeria
     }
 
     @Override

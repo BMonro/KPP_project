@@ -11,7 +11,7 @@ public class RandomStrategy implements IPizzaStrategy {
     public Pizzeria createPizzeria() {
         // Логіка для створення піцерії з випадковими налаштуваннями
         System.out.println("Створення піцерії з випадковими налаштуваннями.");
-        return new Pizzeria(); // Повертає новий об'єкт Pizzeria
+        return null; // Повертає новий об'єкт Pizzeria
     }
 
     @Override
