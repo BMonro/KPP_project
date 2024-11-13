@@ -2,9 +2,9 @@ package kpp.project.pizza.models;
 
 import java.util.List;
 
-public class Pizzaria {
+public class Pizzeria {
     // Статична змінна, яка зберігає єдиний екземпляр класу
-    private static volatile Pizzaria instance;
+    private static volatile Pizzeria instance;
 
     private List<Cooker> employees;
     private List<Cashier> cashiers;
@@ -12,14 +12,14 @@ public class Pizzaria {
     private Menu menu;
 
     // Приватний конструктор для заборони створення об'єктів класу ззовні
-    private Pizzaria() {}
+    public Pizzeria() {}
 
     // Публічний метод для отримання екземпляра класу
-    public static Pizzaria getInstance() {
+    public static Pizzeria getInstance() {
         if (instance == null) {
-            synchronized (Pizzaria.class) {
+            synchronized (Pizzeria.class) {
                 if (instance == null) {
-                    instance = new Pizzaria();
+                    instance = new Pizzeria();
                 }
             }
         }
