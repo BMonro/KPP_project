@@ -1,10 +1,8 @@
 package kpp.project.pizza.controllers;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import kpp.project.pizza.models.Drink;
 import kpp.project.pizza.models.Pizza;
 import kpp.project.pizza.models.Pizzeria;
-import kpp.project.pizza.models.RequestData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,33 +16,43 @@ import java.util.Map;
 @RequestMapping("/")
 @CrossOrigin(origins = "http://localhost:3000")
 public class HomeController {
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @PostMapping
-    public Map<String, String> processRequest(@RequestBody Map<String, Map<String, Object>> requestData) {
-        // Отримання даних за ключами
-        Gson gson = new Gson();
-        List<Drink> drinks = gson.fromJson((String) requestData.get("data").get("Drinks"), new TypeToken<List<Drink>>(){}.getType());
-        List<Pizza> pizzas = gson.fromJson((String) requestData.get("data").get("Pizzas"), new TypeToken<List<Drink>>(){}.getType());
+    public Map<String, String> processRequest(@RequestBody Map<String, Object> requestData) {
+        try {
+            List<Drink> drinks = objectMapper.convertValue(requestData.get("drinks"), List.class);
+            List<Pizza> pizzas = objectMapper.convertValue(requestData.get("pizzas"), List.class);
 
-        Pizzeria.getInstance().getMenu().setMenu(pizzas,drinks);
+            Pizzeria.getInstance().getMenu().setMenu(pizzas, drinks);
 
-//        List<Drink> drinks = (List<Drink>) requestData.get("data").get("Drinks");
-//        List<Pizza> pizzas = (List<Pizza>) requestData.get("data").get("Pizzas");
-//        Pizzeria.getInstance().getMenu().setMenu(pizzas,drinks);
+            Map<String, Object> data = (Map<String, Object>) requestData.get("data");
+            if (data != null) {
+                String choosedCashRegisters = (String) data.get("choosedCashRegisters");
+                String choosedCooks = (String) data.get("choosedCooks");
+                String choosedKitchenMode = (String) data.get("choosedKitchenMode");
 
-//        String choosedCashRegisters = (String) requestData.get("data").get("choosedCashRegisters");
-//        String choosedCooks = (String) requestData.get("data").get("choosedCooks");
-//        String choosedKitchenMode = (String) requestData.get("data").get("choosedKitchenMode");
-//
-//        System.out.println(choosedCashRegisters);
-//
-//
-//        System.out.println(choosedCooks);
-//        System.out.println(choosedKitchenMode);
-//        System.out.println(requestData);
+                Integer choosedCashRegistersInt = (choosedCashRegisters != null && !choosedCashRegisters.isEmpty())
+                        ? Integer.parseInt(choosedCashRegisters) : null;
+                Integer choosedCooksInt = (choosedCooks != null && !choosedCooks.isEmpty())
+                        ? Integer.parseInt(choosedCooks) : null;
 
-        Map<String, String> response = new HashMap<>();
-        response.put("email", "johndoe@example.com");
-        return response;
+                Pizzeria.getInstance().setEmployees(choosedCooksInt);
+                Pizzeria.getInstance().setCashiers(choosedCashRegistersInt);
+
+                System.out.println(Pizzeria.getInstance().getCashiers().toString());
+                System.out.println(Pizzeria.getInstance().getEmployees().toString());
+/*                System.out.println(choosedCooks);
+                System.out.println(choosedKitchenMode);*/
+            }
+
+            Map<String, String> response = new HashMap<>();
+            response.put("email", "johndoe@example.com");
+            return response;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new RuntimeException("Error processing request data", e);
+        }
     }
 }

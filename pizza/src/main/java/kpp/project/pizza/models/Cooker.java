@@ -3,7 +3,12 @@ package kpp.project.pizza.models;
 import java.util.List;
 
 public class Cooker {
+    private String name;
     private Pizza pizza;
+
+    public Cooker(String name) {
+        this.name = name;
+    }
 
     // Метод для оновлення статусу з можливістю затримки
     public void editStatus(String status, int delay) {
