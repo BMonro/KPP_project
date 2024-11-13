@@ -38,8 +38,13 @@ public class Pizzeria {
     }
 
     // Сетер для employees
-    public void setEmployees(List<Cooker> employees) {
-        this.employees = employees;
+    public void setEmployees(int num) {
+        List<Cooker> cookers = new ArrayList<>();
+        for (int i = 0; i<num; i++) {
+            Cooker cooc = new Cooker("Name "+i);
+            cookers.add(cooc);
+        }
+        this.employees = cookers;
     }
 
     // Геттер для cashiers
@@ -48,7 +53,12 @@ public class Pizzeria {
     }
 
     // Сетер для cashiers
-    public void setCashiers(List<Cashier> cashiers) {
+    public void setCashiers(int num) {
+        List<Cashier> cashiers = new ArrayList<>();
+        for (int i = 0; i<num; i++) {
+            Cashier cashier = new Cashier(i);
+            cashiers.add(cashier);
+        }
         this.cashiers = cashiers;
     }
 
