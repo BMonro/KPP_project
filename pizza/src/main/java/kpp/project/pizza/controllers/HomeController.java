@@ -24,7 +24,9 @@ public class HomeController {
         String choosedCashRegisters = (String) requestData.get("choosedCashRegisters");
         Pizzeria.getInstance().getMenu().setMenu(pizzas,drinks);
         System.out.println(requestData);
-        // Логіка обробки даних
+
+
+
         Map<String, String> response = new HashMap<>();
         response.put("email", "johndoe@example.com");
         return response;

@@ -11,6 +11,6 @@ public class RushHourStrategy implements IPizzaStrategy {
         callCount++;
 
         // Генеруємо число, яке залежить від кількості викликів
-        return callCount * 2; // Наприклад, затримка зростає на 2 кожного разу
+        return Math.max((60 - 2 * callCount), 15); // Наприклад, затримка зростає на 2 кожного разу
     }
 }

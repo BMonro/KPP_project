@@ -6,9 +6,6 @@ public class Order {
     // Поле для зберігання ідентифікатора замовлення
     public int orderID;
 
-    // Поле для зберігання номера столика
-    public int tableNumber;
-
     // Поле для зберігання списку піц у замовленні
     public List<Pizza> pizzas;
 
