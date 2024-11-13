@@ -1,18 +1,16 @@
 package kpp.project.pizza.models.strategies;
 
-import kpp.project.pizza.models.Pizzeria;
-
 public class RushHourStrategy implements IPizzaStrategy {
-    @Override
-    public Pizzeria createPizzeria() {
-        // Логіка для створення піцерії у час пік
-        System.out.println("Створення піцерії з врахуванням часу пік.");
-        return null; // Повертає новий об'єкт Pizzeria
-    }
+
+    // Статична змінна для відстеження кількості викликів
+    private static int callCount = 0;
 
     @Override
-    public void generateDelays(Pizzeria pizzeria) {
-        // Логіка для генерації затримок у час пік
-        System.out.println("Генерація затримок у час пік у піцерії.");
+    public int generateDelays() {
+        // Збільшуємо лічильник кожного разу, коли викликається метод
+        callCount++;
+
+        // Генеруємо число, яке залежить від кількості викликів
+        return Math.max((60 - 2 * callCount), 15); // Наприклад, затримка зростає на 2 кожного разу
     }
 }

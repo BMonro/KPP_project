@@ -3,15 +3,26 @@ package kpp.project.pizza.models;
 import java.util.List;
 
 public class Customer {
+    private Order order;
+    private String idCashier;
 
-    // Метод для створення замовлення на основі меню
-    public Order makeOrder(Menu menu) {
-
-        return new Order();
+    // Геттер для поля order
+    public Order getOrder() {
+        return order;
     }
 
-    // Метод для вибору касира з наданого списку
-    public void selectCheckout(List<Cashier> cashiers) {
+    // Сеттер для поля order
+    public void setOrder(Order order) {
+        this.order = order;
+    }
 
+    // Геттер для поля idCashier
+    public String getIdCashier() {
+        return idCashier;
+    }
+
+    // Сеттер для поля idCashier
+    public void setIdCashier(String idCashier) {
+        this.idCashier = idCashier;
     }
 }
