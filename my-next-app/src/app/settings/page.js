@@ -17,54 +17,54 @@ import juice from "/public/juice.svg";
 
 const initialPizzas = [
     {
-        title: "Greek pizza",
+        name: "Greek pizza",
         time: "20 minutes",
-        money: "8",
+        price: "8",
         img: pizza
     },
     {
-        title: "Neapolitan pizza",
+        name: "Neapolitan pizza",
         time: "25 minutes",
-        money: "10",
+        price: "10",
         img: pizza
     },
     {
-        title: "Greek pizza",
+        name: "Greek pizza",
         time: "20 minutes",
-        money: "8",
+        price: "8",
         img: pizza
     },
     {
-        title: "Greek pizza",
+        name: "Greek pizza",
         time: "20 minutes",
-        money: "8",
+        price: "8",
         img: pizza
     },
     {
-        title: "Greek pizza",
+        name: "Greek pizza",
         time: "20 minutes",
-        money: "8",
+        price: "8",
         img: pizza
     },
 ];
 
 const initialDrinks = [
     {
-        title: "Strawberry soda",
+        name: "Strawberry soda",
         time: null,
-        money: "4",
+        price: "4",
         img: soda
     },
     {
-        title: "Coca - cola",
+        name: "Coca - cola",
         time: null,
-        money: "2",
+        price: "2",
         img: cola
     },
     {
-        title: "Orange juice",
+        name: "Orange juice",
         time: null,
-        money: "3",
+        price: "3",
         img: juice
     },
    
