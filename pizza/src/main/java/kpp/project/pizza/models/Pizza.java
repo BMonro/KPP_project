@@ -28,7 +28,7 @@ public class Pizza implements Cloneable, Serializable {
     private IPizzaStatus state;
 
     // Поле для зберігання часу приготування
-    private Date cookingTime;
+    private int cookingTime;
 
     // Геттер для назви
     public String getName() {
@@ -81,12 +81,12 @@ public class Pizza implements Cloneable, Serializable {
     }
 
     // Геттер для часу приготування
-    public Date getCookingTime() {
+    public int getCookingTime() {
         return cookingTime;
     }
 
     // Сетер для часу приготування
-    public void setCookingTime(Date cookingTime) {
+    public void setCookingTime(int cookingTime) {
         this.cookingTime = cookingTime;
     }
 
