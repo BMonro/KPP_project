@@ -1,6 +1,8 @@
 package kpp.project.pizza.models;
 
-import javax.swing.plaf.nimbus.State;
+
+import kpp.project.pizza.models.statuses.IPizzaStatus;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
@@ -23,7 +25,7 @@ public class Pizza implements Cloneable, Serializable {
     private double price;
 
     // Поле для зберігання стану
-    private State state;
+    private IPizzaStatus state;
 
     // Поле для зберігання часу приготування
     private Date cookingTime;
@@ -69,12 +71,12 @@ public class Pizza implements Cloneable, Serializable {
     }
 
     // Геттер для стану
-    public State getState() {
+    public IPizzaStatus getState() {
         return state;
     }
 
     // Сетер для стану
-    public void setState(State state) {
+    public void setState(IPizzaStatus state) {
         this.state = state;
     }
 

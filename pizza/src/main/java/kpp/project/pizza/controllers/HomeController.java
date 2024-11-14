@@ -3,6 +3,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kpp.project.pizza.models.Drink;
 import kpp.project.pizza.models.Pizza;
 import kpp.project.pizza.models.Pizzeria;
+import kpp.project.pizza.models.Simulation;
+import kpp.project.pizza.models.strategies.IPizzaStrategy;
+import kpp.project.pizza.models.strategies.RandomStrategy;
+import kpp.project.pizza.models.strategies.RushHourStrategy;
+import kpp.project.pizza.models.strategies.StandartStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -27,10 +32,12 @@ public class HomeController {
             Pizzeria.getInstance().getMenu().setMenu(pizzas, drinks);
 
             Map<String, Object> data = (Map<String, Object>) requestData.get("data");
+            System.out.println(data);
             if (data != null) {
                 String choosedCashRegisters = (String) data.get("choosedCashRegisters");
                 String choosedCooks = (String) data.get("choosedCooks");
                 String choosedKitchenMode = (String) data.get("choosedKitchenMode");
+                String strategyNumber = (String) data.get("choosedStrategy");
 
                 Integer choosedCashRegistersInt = (choosedCashRegisters != null && !choosedCashRegisters.isEmpty())
                         ? Integer.parseInt(choosedCashRegisters) : null;
@@ -40,14 +47,29 @@ public class HomeController {
                 Pizzeria.getInstance().setEmployees(choosedCooksInt);
                 Pizzeria.getInstance().setCashiers(choosedCashRegistersInt);
 
-                System.out.println(Pizzeria.getInstance().getCashiers().toString());
-                System.out.println(Pizzeria.getInstance().getEmployees().toString());
-/*                System.out.println(choosedCooks);
-                System.out.println(choosedKitchenMode);*/
+                IPizzaStrategy strategy;
+                switch (strategyNumber) {
+                    case "Strategy 1":
+                        strategy = new StandartStrategy();
+                        break;
+                    case "Strategy 2":
+                        strategy = new RushHourStrategy();
+                        break;
+                    case "Strategy 3":
+                        strategy = new RandomStrategy();
+                        break;
+                    default:
+                        strategy = new StandartStrategy();
+                }
+                Simulation simulation = new Simulation(strategy);
+                simulation.start();
+                Map<String, String> response = new HashMap<>();
+                response.put("status", "OK");
+                return response;
             }
 
             Map<String, String> response = new HashMap<>();
-            response.put("email", "johndoe@example.com");
+            response.put("status", "FAIL");
             return response;
 
         } catch (Exception e) {
