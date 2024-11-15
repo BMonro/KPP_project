@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function Header() {
     return (
@@ -22,7 +23,7 @@ export default function Header() {
                 </button>
 
                 {/* Кнопка Вихід */}
-                <button>
+                <Link href="/">
                     <Image 
                         src="/simulation/images/SymbolLeave.png" 
                         alt="Exit Button" 
@@ -30,7 +31,7 @@ export default function Header() {
                         height={30} 
                         className="cursor-pointer"
                     />
-                </button>
+                </Link>
             </div>
         </header>
     );
