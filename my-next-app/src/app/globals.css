@@ -37,49 +37,65 @@ body {
 }
 
 
-.simulation {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto;
-  gap: 20px; /* Відстань між столиками */
-  padding: 20px;
-}
+
+/*стилі для бекграунду*/
 
 .simulation-background {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: auto;
-  gap: 20px;
-  padding: 20px;
-  background-color: #f1f1f1; /* Колір фону для симуляції */
-  height: 100vh;
-}
-
-/* Стилі для столиків */
-.table {
+  height: 100%;
   width: 100%;
-  height: 30%; /* Висота столика */
-  background-size: contain;
-  background-repeat: no-repeat;
-  background-position: center;
+  background-color: #FFF2EB;
+  position: relative; /* Для позиціонування елементів всередині */
 }
 
-/* Імпортуємо зображення для кожного столика */
-.table1 {
-  background-image: url('/simulation/images/Table1.png');
+.table-image {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  max-width: 100%; /* Не виходити за межі контейнера */
+  max-height: 80vh; /* Не виходити за межі екрану по висоті */
 }
 
-.table2 {
-  background-image: url('/simulation/images/Table2.png');
+.casa-image{
+  position: absolute;
+  top: 100px;
+  left: 900px;
+  max-width: 100%; /* Не виходити за межі контейнера */
+  max-height: 80vh; /* Не виходити за межі екрану по висоті */
 }
 
-.table3 {
-  background-image: url('/simulation/images/Table4.png');
+.door-image{
+  position: absolute;
+  top: 92%;
+  left: 86%;
+  max-width: 100%; /* Не виходити за межі контейнера */
+  max-height: 80vh; /* Не виходити за межі екрану по висоті */
 }
 
-/* Столик 4 розміщується під першими трьома столиками */
-.table4 {
-  grid-column: 1 / -1;
-  justify-self: center;
-  background-image: url('/simulation/images/Table3.png');
+/* стилі персонажів */
+
+.cooker-image {
+  max-width: 150px;
+  height: auto;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.cooker-image:hover {
+  transform: scale(1.1);
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+  bottom: 110%;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 12px;
+  white-space: nowrap;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  z-index: 10;
 }

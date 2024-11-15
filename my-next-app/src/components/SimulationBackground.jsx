@@ -4,11 +4,9 @@
 export default function BackGround() {
     return (
         <div className="simulation-background">
-            {/* Контейнер для столиків */}
-            <div className="table table1"></div>
-            <div className="table table2"></div>
-            <div className="table table3"></div>
-            <div className="table table4"></div>
+             <img src="/simulation/images/tables.png" alt="Table" className="table-image" />
+             <img src="/simulation/images/casa.png" alt="Casa" className="casa-image" />
+             <img src="/simulation/images/door.png" alt="Door" className="door-image" />
         </div>
     );
 }
