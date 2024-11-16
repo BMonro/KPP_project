@@ -32,7 +32,7 @@ public class Simulation extends Thread{
         scheduler.scheduleAtFixedRate(() -> {
             Order order = new Order();
             List<Pizza> pizzas = new ArrayList<>();
-            List<Pizza> allpizzas = Pizzeria.getInstance().getMenu().g
+            List<Pizza> allpizzas = Pizzeria.getInstance().getMenu().getPizzas();
             pizzas.add(new Pizza("1","20", 30, 30, order.getOrderID()));
             pizzas.add(new Pizza("2","20", 40, 40, order.getOrderID()));
             order.setPizzas(pizzas);
