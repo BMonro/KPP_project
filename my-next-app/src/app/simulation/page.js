@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import Client from "@/components/Client";
 import Cooker from "@/components/Cooker";
 import Cashier from "@/components/Cashier";
-
+import { sendDataToBackend } from "@/utils/sentData";
 
 export default function Simulation() {
   const [isModalOpen, setIsModalOpen] = useState(false);
