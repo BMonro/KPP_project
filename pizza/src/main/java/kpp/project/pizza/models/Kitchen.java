@@ -27,4 +27,7 @@ public class Kitchen  extends Thread{
 
         }
     }
+    private static void onePizzaOneCooker(){
+
+    }
 }
