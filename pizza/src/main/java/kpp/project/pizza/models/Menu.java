@@ -14,4 +14,6 @@ public class Menu {
         this.pizzas = pizzas;
         this.drinks = drinks;
     }
+    public List<Pizza> getPizzas() {return pizzas;}
+    public List<Drink> getDrinks() {return drinks;}
 }
