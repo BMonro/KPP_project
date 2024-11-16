@@ -10,6 +10,14 @@ public class Cashier {
         this.id = id;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public int getCustomersQueue() {
+        return customers != null ? customers.size() : 0;
+    }
+
     public void workWithNextCustomer() {
 
     }
