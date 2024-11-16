@@ -2,6 +2,7 @@ package kpp.project.pizza.models;
 
 import com.google.gson.Gson;
 import kpp.project.pizza.models.strategies.IPizzaStrategy;
+import org.apache.el.stream.Stream;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -54,9 +55,13 @@ public class Simulation extends Thread{
                 }
             }
             order.setDrinks(drinks);
+
+            List<Cashier> cashiers = new ArrayList<>();
+            int cashierID = chooseCashier(cashiers);
+
             Customer customer = new Customer();
+            customer.setIdCashier(String.valueOf(cashierID));
             customer.setOrder(order);
-            //sendCustomerData(customer);
         }, 0, deley, TimeUnit.SECONDS);
     }
 
@@ -74,6 +79,21 @@ public class Simulation extends Thread{
         Random random = new Random();
         int randomOrderPartIndex = random.nextInt(ordersPartTypeCount);
         return ordersPartList.get(randomOrderPartIndex);
+    }
+
+    public int chooseCashier(List<Cashier> cashierList) {
+        int cashierCount = cashierList.size();
+        int minQueueIndex = 0;
+        int minQueueSize = Integer.MAX_VALUE;
+
+        for (int i = 0; i < cashierCount; i++) {
+            int currentQueueSize = cashierList.get(i).getCustomersQueue();
+            if (currentQueueSize < minQueueSize) {
+                minQueueSize = currentQueueSize;
+                minQueueIndex = i;
+            }
+        }
+        return cashierList.get(minQueueIndex).getId();
     }
 
     public static void sendCustomerData(Customer customer) {
