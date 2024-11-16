@@ -52,7 +52,9 @@ public class Pizza implements Cloneable, Serializable {
     public void setName(String name) {
         this.name = name;
     }
-
+    public void nextStatus(){
+        state.next(this);
+    }
     // Геттер для інгредієнтів
     public List<String> getIngredients() {
         return ingredients;
