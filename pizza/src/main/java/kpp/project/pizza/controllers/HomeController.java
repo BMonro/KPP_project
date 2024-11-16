@@ -53,6 +53,15 @@ public class HomeController {
                 Integer choosedCooksInt = (choosedCooks != null && !choosedCooks.isEmpty())
                         ? Integer.parseInt(choosedCooks) : null;
 
+                Integer intKitchenMode = 0;
+                if (choosedKitchenMode.equals("1 cook - 1 pizza")) {
+                    intKitchenMode = 1;
+                } else if (choosedKitchenMode.equals("1 cook - 1 option")) {
+                    intKitchenMode = 2;
+                }
+
+                System.out.println("Int mode " + intKitchenMode);
+                //Pizzeria.getInstance().getKitchen().setMode(intKitchenMode)
                 Pizzeria.getInstance().setEmployees(choosedCooksInt);
                 Pizzeria.getInstance().setCashiers(choosedCashRegistersInt);
 
