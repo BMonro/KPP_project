@@ -1,14 +1,10 @@
 package kpp.project.pizza.models.statuses;
 
-public class Baking implements IPizzaStatus {
-    private int timeToBake;
-    @Override
-    public void next() {
-        System.out.println("Moving to the next state...");
-    }
+import kpp.project.pizza.models.Pizza;
 
+public class Baking implements IPizzaStatus {
     @Override
-    public void getState() {
-        System.out.println("Getting current state...");
+    public void next(Pizza pizza) {
+        pizza.setState(new Packing());
     }
 }

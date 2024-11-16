@@ -1,13 +1,11 @@
 package kpp.project.pizza.models.statuses;
 
+import kpp.project.pizza.models.Pizza;
+
 public class Ordered implements IPizzaStatus{
     @Override
-    public void next() {
-        System.out.println("Moving to the next state...");
+    public void next(Pizza pizza) {
+        pizza.setState(new Kneading());
     }
 
-    @Override
-    public void getState() {
-        System.out.println("Getting current state...");
-    }
 }

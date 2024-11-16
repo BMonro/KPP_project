@@ -1,5 +1,7 @@
 package kpp.project.pizza.models;
 
+import kpp.project.pizza.models.statuses.Ordered;
+
 import java.util.List;
 import java.util.Queue;
 
@@ -9,6 +11,7 @@ public class Kitchen  extends Thread{
     private Queue<Pizza> pizzas;
     public Kitchen() {}
     public void addPizza(Pizza pizza) {
+        pizza.setState(new Ordered());
         pizzas.add(pizza);
     }
     public Pizza getPizza() {

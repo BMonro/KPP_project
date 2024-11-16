@@ -92,7 +92,6 @@ public class Pizza implements Cloneable, Serializable {
     public void setState(IPizzaStatus state) {
         this.state = state;
     }
-
     // Геттер для часу приготування
     public int getCookingTime() {
         return cookingTime;

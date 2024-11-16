@@ -1,10 +1,8 @@
 package kpp.project.pizza.models.statuses;
 
+import kpp.project.pizza.models.Pizza;
+import kpp.project.pizza.models.Pizzeria;
+
 public interface IPizzaStatus {
-    public abstract void next();
-    public abstract void getState();
-
-    public default void stop(){
-
-    }
+    void next(Pizza pizza);
 }
