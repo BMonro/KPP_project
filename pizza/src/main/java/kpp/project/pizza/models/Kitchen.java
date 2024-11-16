@@ -14,6 +14,7 @@ public class Kitchen  extends Thread{
         pizza.setState(new Ordered());
         pizzas.add(pizza);
     }
+    public void setMode(int mode1) {mode = mode1;}
     public Pizza getPizza() {
         return pizzas.poll();
     }
