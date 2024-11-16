@@ -22,12 +22,37 @@ public class Kitchen  extends Thread{
     @Override
     public void run() {
         if(mode==1){
-
+            onePizzaOneState();
         }else if (mode == 2){
             onePizzaOneCooker();
         }
     }
-
+    private static void onePizzaOneState(){
+        while(true){
+            if(!pizzas.isEmpty()){
+                Cooker cooker = employees.getFirst();
+                while (cooker.getPizza()==null){}
+                cooker.setPizza(pizzas.poll());
+                Thread t = new Thread(()->{
+                    try {
+                        for(int i=1;i<employees.size();i++){
+                            Pizza pizza1 = employees.get(i-1).getPizza();
+                            double time = pizza1.getCookingTime()/4.0;
+                            pizza1.nextStatus();
+                            Cooker cooker1 = employees.get(i);
+                            Thread.sleep((int)(time*1000));
+                            employees.get(i-1).setPizza(null);
+                            while (cooker1.getPizza()==null){}
+                            cooker.setPizza(pizza1);
+                        }
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                t.start();
+            }
+        }
+    }
     public static int[] divideTimeByProportions(int totalTime) {
         double[] proportions = new double[]{0.2, 0.3, 0.3, 0.2};
         int[] parts = new int[proportions.length];
