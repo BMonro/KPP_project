@@ -43,8 +43,6 @@ public class Simulation extends Thread{
         }, 0, deley, TimeUnit.SECONDS);
     }
 
-
-
     public static void sendCustomerData(Customer customer) {
         try {
             // Створюємо об'єкт HttpClient
