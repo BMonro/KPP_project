@@ -1,7 +1,9 @@
 package kpp.project.pizza.models;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class Pizzeria {
     // Статична змінна, яка зберігає єдиний екземпляр класу
@@ -11,13 +13,19 @@ public class Pizzeria {
     private List<Cashier> cashiers;
     private List<Order> orders;
     private Menu menu;
+    private Kitchen kitchen;
 
     // Приватний конструктор для заборони створення об'єктів класу ззовні
     private Pizzeria() {
         menu = new Menu();
         employees = new ArrayList<>();
         cashiers = new ArrayList<>();
-        orders = new ArrayList<>();
+        orders = new LinkedList<>();
+        kitchen = new Kitchen();
+    }
+
+    public Kitchen getKitchen() {
+        return kitchen;
     }
 
     // Публічний метод для отримання екземпляра класу (Singleton)
@@ -68,8 +76,11 @@ public class Pizzeria {
     }
 
     // Сетер для orders
-    public void setOrders(List<Order> orders) {
-        this.orders = orders;
+    public void addOrder(Order order) {
+        for(Pizza pizza:order.getPizzas()){
+            kitchen.addPizza(pizza);
+        }
+        this.orders.add(order);
     }
 
     // Геттер для menu

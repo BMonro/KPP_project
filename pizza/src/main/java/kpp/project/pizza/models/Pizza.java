@@ -10,8 +10,10 @@ import java.util.List;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Pizza implements Cloneable, Serializable {
+    private int orderId;
     // Поле для зберігання назви
     private String name;
 
@@ -26,10 +28,21 @@ public class Pizza implements Cloneable, Serializable {
 
     // Поле для зберігання стану
     private IPizzaStatus state;
+    public Pizza(){}
+    public Pizza(String name, String size, double price, int cookingTime, int orderId) {
+        this.name = name;
+        this.size = size;
+        this.price = price;
+        this.cookingTime = cookingTime;
+        this.orderId = orderId;
+    }
 
     // Поле для зберігання часу приготування
     private int cookingTime;
 
+
+
+    public int getOrderId() {return orderId;}
     // Геттер для назви
     public String getName() {
         return name;
@@ -104,5 +117,15 @@ public class Pizza implements Cloneable, Serializable {
             e.printStackTrace();
             return null;
         }
+    }
+    @Override
+    public String toString() {
+        return "Pizza {" +
+                "name='" + name + '\'' +
+                ", size='" + size + '\'' +
+                ", price=" + price +
+                ", state=" + (state != null ? state.toString() : "N/A") +
+                ", cookingTime=" + cookingTime +
+                '}';
     }
 }

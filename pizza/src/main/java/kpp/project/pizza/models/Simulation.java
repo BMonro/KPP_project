@@ -8,6 +8,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -29,6 +31,11 @@ public class Simulation extends Thread{
         int deley = strategy.generateDelays();
         scheduler.scheduleAtFixedRate(() -> {
             Order order = new Order();
+            List<Pizza> pizzas = new ArrayList<>();
+            pizzas.add(new Pizza("1","20", 30, 30, order.getOrderID()));
+            pizzas.add(new Pizza("2","20", 40, 40, order.getOrderID()));
+            order.setPizzas(pizzas);
+
             Customer customer = new Customer();
             customer.setOrder(order);
             sendCustomerData(customer);
@@ -45,12 +52,11 @@ public class Simulation extends Thread{
             // Серіалізуємо об'єкт Customer в JSON
             Gson gson = new Gson();
             String json = gson.toJson(customer);
-
             // Створюємо запит POST для відправки даних
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:3000/new/customer"))  // Заміна на реальний URL
+                    .uri(URI.create("http://localhost:3001/new/customer"))  // Заміна на реальний URL
                     .header("Content-Type", "application/json")  // Вказуємо, що передаємо JSON
-                    .POST(HttpRequest.BodyPublishers.ofString(json, StandardCharsets.UTF_8))  // Тіло запиту в форматі JSON
+                    .POST(HttpRequest.BodyPublishers.ofString(json))  // Тіло запиту в форматі JSON
                     .build();
 
             // Виконуємо запит
