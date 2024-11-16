@@ -24,4 +24,12 @@ public class Cooker {
     public void getNextOrder(List<Order> orders) {
 
     }
+
+    public Pizza getPizza() {
+        return this.pizza;
+    }
+
+    public void setPizza(Pizza pizza) {
+        this.pizza = pizza;
+    }
 }
