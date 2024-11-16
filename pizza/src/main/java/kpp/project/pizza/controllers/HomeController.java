@@ -43,10 +43,10 @@ public class HomeController {
             Pizzeria.getInstance().getMenu().setMenu(pizzas, drinks);
 
             if (data != null) {
-                String choosedCashRegisters = (String) data.get("choosedCashRegisters");
-                String choosedCooks = (String) data.get("choosedCooks");
-                String choosedKitchenMode = (String) data.get("choosedKitchenMode");
-                String strategyNumber = (String) data.get("choosedStrategy");
+                String choosedCashRegisters = ((String) data.get("choosedCashRegisters")).replaceAll("\"","");
+                String choosedCooks = ((String) data.get("choosedCooks")).replaceAll("\"","");
+                String choosedKitchenMode = ((String) data.get("choosedKitchenMode")).replaceAll("\"","");
+                String strategyNumber = ((String) data.get("choosedStrategy")).replaceAll("\"","");
 
                 Integer choosedCashRegistersInt = (choosedCashRegisters != null && !choosedCashRegisters.isEmpty())
                         ? Integer.parseInt(choosedCashRegisters) : null;
