@@ -8,8 +8,6 @@ import java.util.Queue;
 public class Pizzeria {
     // Статична змінна, яка зберігає єдиний екземпляр класу
     private static volatile Pizzeria instance;
-
-    private List<Cooker> employees;
     private List<Cashier> cashiers;
     private List<Order> orders;
     private Menu menu;
@@ -18,7 +16,6 @@ public class Pizzeria {
     // Приватний конструктор для заборони створення об'єктів класу ззовні
     private Pizzeria() {
         menu = new Menu();
-        employees = new ArrayList<>();
         cashiers = new ArrayList<>();
         orders = new LinkedList<>();
         kitchen = new Kitchen();
@@ -40,11 +37,6 @@ public class Pizzeria {
         return instance;
     }
 
-    // Геттер для employees
-    public List<Cooker> getEmployees() {
-        return employees;
-    }
-
     // Сетер для employees
     public void setEmployees(int num) {
         List<Cooker> cookers = new ArrayList<>();
@@ -52,7 +44,7 @@ public class Pizzeria {
             Cooker cooc = new Cooker("Name "+i);
             cookers.add(cooc);
         }
-        this.employees = cookers;
+        kitchen.setEmployees(cookers);
     }
 
     // Геттер для cashiers
@@ -91,5 +83,10 @@ public class Pizzeria {
     // Сетер для menu
     public void setMenu(Menu menu) {
         this.menu = menu;
+    }
+
+
+    public void startCookerWork(){
+
     }
 }
