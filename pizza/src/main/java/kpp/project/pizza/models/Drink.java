@@ -6,17 +6,23 @@ public class Drink implements Cloneable {
 
     // Поле для зберігання розміру
     private String size;
+    private int orderID;
 
     // Поле для зберігання ціни
     private double price;
-
+    public Drink(){}
     public Drink(String name, String size, double price, int orderID) {
+        this.name = name;
+        this.size = size;
+        this.price = price;
+        this.orderID = orderID;
     }
 
     // Геттер для назви
     public String getName() {
         return name;
     }
+    public int getOrderID() {return orderID;}
 
     // Сетер для назви
     public void setName(String name) {
@@ -53,4 +59,13 @@ public class Drink implements Cloneable {
             return null;
         }
     }
+    @Override
+    public String toString() {
+        return "Drink{" +
+                "name='" + name + '\'' +
+                ", size='" + size + '\'' +
+                ", price=" + price +
+                '}';
+    }
+
 }

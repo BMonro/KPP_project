@@ -1,5 +1,8 @@
 package kpp.project.pizza.controllers;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import kpp.project.pizza.models.Drink;
 import kpp.project.pizza.models.Pizza;
 import kpp.project.pizza.models.Pizzeria;
@@ -16,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
+import java.lang.reflect.Type;
 @RestController
 @RequestMapping("/")
 @CrossOrigin(origins = "http://localhost:3000")
@@ -26,13 +29,19 @@ public class HomeController {
     @PostMapping
     public Map<String, String> processRequest(@RequestBody Map<String, Object> requestData) {
         try {
-            List<Drink> drinks = objectMapper.convertValue(requestData.get("drinks"), List.class);
-            List<Pizza> pizzas = objectMapper.convertValue(requestData.get("pizzas"), List.class);
+            Map<String, Object> data = (Map<String, Object>) requestData.get("data");
+            Gson gson = new Gson();
+
+            // Оголошуємо тип для списку Drink
+            Type listType1 = new TypeToken<List<Drink>>() {}.getType();
+            Type listType2 = new TypeToken<List<Pizza>>() {}.getType();
+
+            // Парсинг JSON у список об'єктів Drink
+            List<Drink> drinks = gson.fromJson((String)data.get("Drinks"), listType1);
+            List<Pizza> pizzas = gson.fromJson((String)data.get("Pizzas"), listType2);
 
             Pizzeria.getInstance().getMenu().setMenu(pizzas, drinks);
 
-            Map<String, Object> data = (Map<String, Object>) requestData.get("data");
-            System.out.println(data);
             if (data != null) {
                 String choosedCashRegisters = (String) data.get("choosedCashRegisters");
                 String choosedCooks = (String) data.get("choosedCooks");

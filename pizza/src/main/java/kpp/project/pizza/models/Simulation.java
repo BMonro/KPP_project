@@ -31,14 +31,12 @@ public class Simulation extends Thread{
     public void generateCustomers() {
         int deley = strategy.generateDelays();
         scheduler.scheduleAtFixedRate(() -> {
+
             Order order = new Order();
             List<Pizza> pizzas = new ArrayList<>();
             List<Pizza> allPizzas = Pizzeria.getInstance().getMenu().getPizzas();
-
             List<Drink> drinks = new ArrayList<>();
             List<Drink> allDrinks = Pizzeria.getInstance().getMenu().getDrinks();
-
-            // Generate random count for pizzas
             int pizzaCount = generateCount();
             for (int i = 0; i < pizzaCount; i++) {
                 Pizza pizza = generateOrdersPart(allPizzas);
@@ -56,7 +54,6 @@ public class Simulation extends Thread{
                 }
             }
             order.setDrinks(drinks);
-
             Customer customer = new Customer();
             customer.setOrder(order);
             sendCustomerData(customer);
