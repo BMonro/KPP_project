@@ -56,7 +56,7 @@ public class Simulation extends Thread{
             order.setDrinks(drinks);
             Customer customer = new Customer();
             customer.setOrder(order);
-            sendCustomerData(customer);
+            //sendCustomerData(customer);
         }, 0, deley, TimeUnit.SECONDS);
     }
 
