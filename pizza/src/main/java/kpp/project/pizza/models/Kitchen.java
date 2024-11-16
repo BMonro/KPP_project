@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Queue;
 
 public class Kitchen  extends Thread{
-    private int mode;
-    private List<Cooker> employees;
-    private Queue<Pizza> pizzas;
+    private static int mode;
+    private static List<Cooker> employees;
+    private static Queue<Pizza> pizzas;
     public Kitchen() {}
     public void addPizza(Pizza pizza) {
         pizza.setState(new Ordered());
@@ -28,6 +28,13 @@ public class Kitchen  extends Thread{
         }
     }
     private static void onePizzaOneCooker(){
+        while(true){
+            if(  !STATIC_VALUES.cookers.isEmpty()){
+                Cooker cooker = STATIC_VALUES.cookers.getFirst();
+                STATIC_VALUES.cookers.remove(cooker);
 
+            }
+        }
     }
+
 }

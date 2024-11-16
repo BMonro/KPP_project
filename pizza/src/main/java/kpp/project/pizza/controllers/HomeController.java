@@ -39,7 +39,7 @@ public class HomeController {
             // Парсинг JSON у список об'єктів Drink
             List<Drink> drinks = gson.fromJson((String)data.get("Drinks"), listType1);
             List<Pizza> pizzas = gson.fromJson((String)data.get("Pizzas"), listType2);
-
+            System.out.println(data.get("Pizzas"));
             Pizzeria.getInstance().getMenu().setMenu(pizzas, drinks);
 
             if (data != null) {
@@ -56,20 +56,12 @@ public class HomeController {
                 Pizzeria.getInstance().setEmployees(choosedCooksInt);
                 Pizzeria.getInstance().setCashiers(choosedCashRegistersInt);
 
-                IPizzaStrategy strategy;
-                switch (strategyNumber) {
-                    case "Strategy 1":
-                        strategy = new StandartStrategy();
-                        break;
-                    case "Strategy 2":
-                        strategy = new RushHourStrategy();
-                        break;
-                    case "Strategy 3":
-                        strategy = new RandomStrategy();
-                        break;
-                    default:
-                        strategy = new StandartStrategy();
-                }
+                IPizzaStrategy strategy = switch (strategyNumber) {
+                    case "Strategy 1" -> new StandartStrategy();
+                    case "Strategy 2" -> new RushHourStrategy();
+                    case "Strategy 3" -> new RandomStrategy();
+                    default -> new StandartStrategy();
+                };
                 Simulation simulation = new Simulation(strategy);
                 simulation.start();
                 Map<String, String> response = new HashMap<>();
