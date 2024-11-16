@@ -16,6 +16,17 @@ export default function Simulation() {
     { id: 15, item: "Salad Caesar", status: "Готується" }
   ]);
 
+  //Надсилання даних на бек
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      const value = localStorage.getItem(key);
+      data[key] = value;
+      console.log(`${key}: ${value}`);
+  }
+  sendDataToBackend(data);
+
+
   // Стани для даних з localStorage
   const [cooks, setCooks] = useState(1);
   const [cashRegisters, setCashRegisters] = useState(1);
