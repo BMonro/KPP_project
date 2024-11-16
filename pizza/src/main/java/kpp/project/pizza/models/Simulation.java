@@ -1,6 +1,7 @@
 package kpp.project.pizza.models;
 
 import com.google.gson.Gson;
+import kpp.project.pizza.models.statuses.IPizzaStatus;
 import kpp.project.pizza.models.strategies.IPizzaStrategy;
 import org.apache.el.stream.Stream;
 
@@ -96,34 +97,39 @@ public class Simulation extends Thread{
         return cashierList.get(minQueueIndex).getId();
     }
 
-    public static void sendCustomerData(Customer customer) {
+    public static void sendCustomerData(IPizzaStatus status, String nameOfPizza, int orderId) {
         try {
+            // Створюємо об'єкт DTO для передачі
+            PizzaDataDTO data = new PizzaDataDTO(status.toString(), nameOfPizza, orderId);
+
+            // Серіалізуємо об'єкт DTO в JSON
+            Gson gson = new Gson();
+            String json = gson.toJson(data);
+
             // Створюємо об'єкт HttpClient
             HttpClient client = HttpClient.newHttpClient();
 
-            // Серіалізуємо об'єкт Customer в JSON
-            Gson gson = new Gson();
-            String json = gson.toJson(customer);
             // Створюємо запит POST для відправки даних
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:3001/new/customer"))  // Заміна на реальний URL
-                    .header("Content-Type", "application/json")  // Вказуємо, що передаємо JSON
-                    .POST(HttpRequest.BodyPublishers.ofString(json))  // Тіло запиту в форматі JSON
+                    .uri(URI.create("http://localhost:3001/new/customer")) // Реальний URL
+                    .header("Content-Type", "application/json") // JSON-заголовок
+                    .POST(HttpRequest.BodyPublishers.ofString(json)) // Тіло запиту
                     .build();
 
             // Виконуємо запит
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 
-            // Перевіряємо код відповіді
+            // Перевіряємо відповідь
             if (response.statusCode() == 200) {
-                System.out.println("Customer data successfully sent.");
+                System.out.println("Pizza data successfully sent.");
                 System.out.println("Response Body: " + response.body());
             } else {
-                System.out.println("Failed to send customer data. Response code: " + response.statusCode());
+                System.out.println("Failed to send pizza data. Response code: " + response.statusCode());
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 }

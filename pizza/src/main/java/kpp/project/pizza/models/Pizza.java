@@ -4,8 +4,7 @@ package kpp.project.pizza.models;
 import kpp.project.pizza.models.statuses.IPizzaStatus;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -25,6 +24,8 @@ public class Pizza implements Cloneable, Serializable {
 
     // Поле для зберігання ціни
     private double price;
+
+    private final List<Observer> observers = new ArrayList<>();
 
     // Поле для зберігання стану
     private IPizzaStatus state;
@@ -107,6 +108,15 @@ public class Pizza implements Cloneable, Serializable {
     // Метод для редагування інгредієнтів
     public void editIngredients() {
         // Логіка редагування інгредієнтів
+    }
+    public void addObserver(Observer observer) {
+        observers.add(observer);
+    }
+
+    private void notifyObservers() {
+        for (Observer observer : observers) {
+            observer.update(this);
+        }
     }
 
     // Метод для клонування об'єкта
