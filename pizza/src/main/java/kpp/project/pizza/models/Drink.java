@@ -10,6 +10,9 @@ public class Drink implements Cloneable {
     // Поле для зберігання ціни
     private double price;
 
+    public Drink(String name, String size, double price, int orderID) {
+    }
+
     // Геттер для назви
     public String getName() {
         return name;
