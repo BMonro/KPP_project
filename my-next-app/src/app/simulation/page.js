@@ -7,7 +7,43 @@ import Cooker from "@/components/Cooker";
 import Cashier from "@/components/Cashier";
 import { sendDataToBackend } from "@/utils/sentData";
 
+
 export default function Simulation() {
+
+  const Stages = [
+    {
+      name: "DoughStantion", 
+      x: 50,
+      y: 300,      
+      isFree: true      
+    },
+    {
+      name: "CookingStantion",
+     // x: 425,
+      //y: 300,
+      x: 925,
+      y: 685,  
+      isFree: true
+    },
+    {
+      name: "BakingStantion",
+      x: 700,
+      y: 300,  
+      isFree: true
+    },
+    {
+      name: "BakingStantion2",
+      x: 900,
+      y: 300,  
+      isFree: true
+    },
+    {
+      name: "SlicingStation",
+      x: 700,
+      y: 200,
+      isFree: true
+    }
+  ];
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [orders, setOrders] = useState([
     { id: 12, item: "Pizza Carbonara", status: "Готова" },
@@ -46,23 +82,32 @@ export default function Simulation() {
   useEffect(() => {
     const container = document.getElementById("cooker-container");
     if (container) {
-      // Створюємо кухарів відповідно до збережених даних
+      const cookers = [];
       for (let i = 0; i < cooks; i++) {
-        new Cooker(container, `Chef ${i + 1}`, 200, 300 + i * 100);
+        const newCooker = new Cooker(container, `Chef ${i + 1}`, 0 + i * 75, 600);
+        cookers.push(newCooker);
       }
-
+  
+      // Виклик moveTo для першого кухаря до DoughStation
+      if (cookers.length > 0) {
+        setTimeout(() => {
+          moveTo(cookers[1], "SlicingStation", Stages); // Передаємо Stages як аргумент
+        }, 1000); // Затримка для анімації
+        
+      }
+  
       // Створюємо касири відповідно до збережених даних
       for (let j = 0; j < cashRegisters; j++) {
-        new Cashier(container, `Cashier ${j + 1}`, 775, 475 + j * 265);
+        new Cashier(container, `Cashier ${j + 1}`, 1650 + j * 260, 50);
       }
-
+  
       // Додаємо клієнтів
-      new Client(container, "Oleksiy", "Pizza Carbonara", "Готується", 950, 455);
-      new Client(container, "Maria", "Pizza Pepperoni", "Готова", 950, 725);
-      new Client(container, "Ivan", "Pasta Bolognese", "Готується", 950, 980);
+      new Client(container, "Oleksiy", "Pizza Carbonara", "Готується", 1650, 200);
+      new Client(container, "Maria", "Pizza Pepperoni", "Готова", 1650, 250);
+      new Client(container, "Ivan", "Pasta Bolognese", "Готується", 1910, 200);
     }
   }, [cooks, cashRegisters, kitchenMode]);
-
+  
   const handleTableClick = () => {
     setIsModalOpen(true);
   };
@@ -71,20 +116,43 @@ export default function Simulation() {
     setIsModalOpen(false);
   };
 
+  function moveTo(cooker, stationName, stages) {
+    // Знаходимо потрібну станцію за назвою
+    const station = stages.find((stage) => stage.name === stationName);
+  
+    // Якщо станція не знайдена або вона зайнята, виходимо
+    if (!station || !station.isFree) {
+      console.log(`${stationName} is currently occupied or does not exist.`);
+      return;
+    }
+  
+    // Робимо станцію зайнятою
+    station.isFree = false;
+  
+    console.log(`Moving ${cooker.name} to ${station.name}...`);
+  
+    // Передаємо назву станції для зміни зображення
+    cooker.moveTo(station.x, station.y, () => {
+      console.log(`${cooker.name} reached ${station.name}.`);
+  
+      // Після досягнення станції робимо її знову вільною
+      station.isFree = true;
+    }, stationName);
+  
+  }
   return (
     <div className="h-screen overflow-hidden">
       <Header />
       <div className="simulation-background" id="cooker-container">
         {/* Зображення столу */}
         <img
-          src="/simulation/images/tables.png"
+          src="/simulation/images/newTables.png"
           alt="Table"
           className="table-image"
           onClick={handleTableClick}
           style={{ cursor: "pointer" }}
         />
-        <img src="/simulation/images/casa.png" alt="Casa" className="casa-image" />
-        <img src="/simulation/images/door.png" alt="Door" className="door-image" />
+        <img src="/simulation/images/casaNew.png" alt="Casa" className="casa-image" />
       </div>
 
       {/* Модальне вікно */}
