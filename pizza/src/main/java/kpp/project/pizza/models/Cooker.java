@@ -78,7 +78,13 @@ public class Cooker {
             System.err.println("Error sending cooker data: " + e.getMessage());
         }
     }
+    public String getName() {
+        return this.name;
+    }
 
+    public void setName(String name) {
+        this.name = name;
+    }
     public Pizza getPizza() {
         return this.pizza;
     }
