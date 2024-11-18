@@ -61,7 +61,7 @@ public class HomeController {
                 }
 
                 System.out.println("Int mode " + intKitchenMode);
-                //Pizzeria.getInstance().getKitchen().setMode(intKitchenMode)
+                Pizzeria.getInstance().getKitchen().setMode(intKitchenMode);
                 Pizzeria.getInstance().setEmployees(choosedCooksInt);
                 Pizzeria.getInstance().setCashiers(choosedCashRegistersInt);
 

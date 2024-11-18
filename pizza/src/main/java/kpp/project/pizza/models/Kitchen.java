@@ -9,11 +9,13 @@ public class Kitchen  extends Thread{
     private static int mode;
     private static List<Cooker> employees;
     private static Queue<Pizza> pizzas;
+    private static Simulation simulation;
     public Kitchen() {}
     public void addPizza(Pizza pizza) {
         pizza.setState(new Ordered());
         pizzas.add(pizza);
     }
+    public void setMode(int mode1) {mode = mode1;}
     public Pizza getPizza() {
         return pizzas.poll();
     }
@@ -22,9 +24,36 @@ public class Kitchen  extends Thread{
     @Override
     public void run() {
         if(mode==1){
-
+            onePizzaOneState();
         }else if (mode == 2){
             onePizzaOneCooker();
+        }
+    }
+    private static void onePizzaOneState(){
+        while(true){
+            if(!pizzas.isEmpty()){
+                Cooker cooker = employees.getFirst();
+                while (cooker.getPizza()==null){}
+                cooker.setPizza(pizzas.poll());
+                Thread t = new Thread(()->{
+                    try {
+                        for(int i=1;i<employees.size();i++){
+                            Pizza pizza1 = employees.get(i-1).getPizza();
+                            double time = pizza1.getCookingTime()/4.0;
+                            pizza1.nextStatus();
+                            simulation.sendCustomerData(pizza1.getState(), pizza1.getName(), pizza1.getOrderId());
+                            Cooker cooker1 = employees.get(i);
+                            Thread.sleep((int)(time*1000));
+                            employees.get(i-1).setPizza(null);
+                            while (cooker1.getPizza()==null){}
+                            cooker.setPizza(pizza1);
+                        }
+                    } catch (InterruptedException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
+                t.start();
+            }
         }
     }
 
@@ -44,15 +73,17 @@ public class Kitchen  extends Thread{
     }
 
     private static void onePizzaOneCooker() {
+        Magazine magazine = new Magazine(); // Створюємо спостерігача
+
         while (true) {
             if (!STATIC_VALUES.cookers.isEmpty() && !pizzas.isEmpty()) {
                 Cooker cooker = STATIC_VALUES.cookers.get(0);
                 STATIC_VALUES.cookers.remove(cooker);
 
                 Pizza pizzaFromQueue = pizzas.poll();
+                pizzaFromQueue.addObserver(magazine); // Додаємо спостерігача
                 cooker.setPizza(pizzaFromQueue);
 
-                // Розділити час приготування на 4 частини
                 int timeToCook = pizzaFromQueue.getCookingTime();
                 int[] times = divideTimeByProportions(timeToCook);
 
@@ -60,18 +91,22 @@ public class Kitchen  extends Thread{
                     try {
                         Thread.sleep(times[0] * 1000);
                         cooker.getPizza().nextStatus();
+                        simulation.sendCustomerData(cooker.getPizza().getState(), cooker.getPizza().getName(), cooker.getPizza().getOrderId());
                         System.out.println("Перший етап завершено!");
 
                         Thread.sleep(times[1] * 1000);
                         cooker.getPizza().nextStatus();
+                        simulation.sendCustomerData(cooker.getPizza().getState(), cooker.getPizza().getName(), cooker.getPizza().getOrderId());
                         System.out.println("Другий етап завершено!");
 
                         Thread.sleep(times[2] * 1000);
                         cooker.getPizza().nextStatus();
+                        simulation.sendCustomerData(cooker.getPizza().getState(), cooker.getPizza().getName(), cooker.getPizza().getOrderId());
                         System.out.println("Третій етап завершено!");
 
                         Thread.sleep(times[3] * 1000);
                         cooker.getPizza().nextStatus();
+                        simulation.sendCustomerData(cooker.getPizza().getState(), cooker.getPizza().getName(), cooker.getPizza().getOrderId());
                         System.out.println("Процес завершено!");
 
                         synchronized (STATIC_VALUES.cookers) {
@@ -86,5 +121,6 @@ public class Kitchen  extends Thread{
             }
         }
     }
+
 
 }

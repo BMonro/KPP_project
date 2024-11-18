@@ -1,5 +1,4 @@
-export default // Клас Cooker
-class Cooker {
+export default class Cooker {
   constructor(container, name, x, y) {
     this.container = container;
     this.name = name;
@@ -10,11 +9,12 @@ class Cooker {
   }
 
   createCooker() {
-    const cookerDiv = document.createElement("div");
-    cookerDiv.classList.add("cooker");
-    cookerDiv.style.position = "absolute";
-    cookerDiv.style.left = `${this.x}px`;
-    cookerDiv.style.top = `${this.y}px`;
+    // Створюємо елемент кухаря
+    this.element = document.createElement("div");
+    this.element.classList.add("cooker");
+    this.element.style.position = "absolute";
+    this.element.style.left = `${this.x}px`;
+    this.element.style.top = `${this.y}px`;
 
     const cookerImage = document.createElement("img");
     cookerImage.src = this.imageSrc;
@@ -25,16 +25,50 @@ class Cooker {
     tooltip.classList.add("tooltip");
     tooltip.textContent = this.name;
 
-    cookerDiv.appendChild(cookerImage);
-    cookerDiv.appendChild(tooltip);
-    this.container.appendChild(cookerDiv);
+    this.element.appendChild(cookerImage);
+    this.element.appendChild(tooltip);
+    this.container.appendChild(this.element);
 
-    cookerDiv.addEventListener("mouseenter", () => {
+    // Tooltip visibility on hover
+    this.element.addEventListener("mouseenter", () => {
       tooltip.style.display = "block";
     });
 
-    cookerDiv.addEventListener("mouseleave", () => {
+    this.element.addEventListener("mouseleave", () => {
       tooltip.style.display = "none";
     });
+  }
+
+  updatePosition() {
+    if (this.element) {
+      this.element.style.left = `${this.x}px`;
+      this.element.style.top = `${this.y}px`;
+    }
+  }
+
+  // Переміщуємо кухаря до абсолютних координат
+  moveTo(newX, newY, stationName, callback) {
+    // Зміна зображення
+    const cookerImage = this.element.querySelector(".cooker-image");
+    if (stationName === "SlicingStation") {
+      cookerImage.src = "/simulation/images/CookerInversed.png"; // Зображення для SlicingStation
+    } else {
+      cookerImage.src = "/simulation/images/Cooker.png"; // Дефолтне зображення
+    }
+
+    // Додаємо анімацію для left і top
+    this.element.style.transition = "left 1s ease-in-out, top 1s ease-in-out";
+
+    // Оновлюємо глобальні координати кухаря
+    this.x = newX;
+    this.y = newY;
+
+    // Застосовуємо нові координати
+    this.updatePosition();
+
+    // Виконуємо callback після завершення анімації
+    setTimeout(() => {
+      if (callback) ;
+    }, 1000);
   }
 }
