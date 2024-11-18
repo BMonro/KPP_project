@@ -10,6 +10,16 @@ import { sendDataToBackend } from "@/utils/sentData";
 
 export default function Simulation() {
 
+  const CashRegisters = [];
+
+  for (let i = 0; i < 3; i++) {
+    CashRegisters.push({
+      name: `Cash Register ${i + 1}`,
+      x: 1650 + i*260,
+      y: 200,
+      isFree: true,
+    });
+  }
   const Stages = [
     {
       name: "DoughStantion", 
@@ -39,8 +49,8 @@ export default function Simulation() {
     },
     {
       name: "SlicingStation",
-      x: 700,
-      y: 200,
+      x: 950,
+      y: 700,
       isFree: true
     }
   ];
@@ -67,7 +77,7 @@ export default function Simulation() {
   const [cooks, setCooks] = useState(1);
   const [cashRegisters, setCashRegisters] = useState(1);
   const [kitchenMode, setKitchenMode] = useState("1 cook - 1 option");
-
+  const ClientsNum = 10;
   // Витягуємо дані з localStorage при завантаженні компонента
   useEffect(() => {
     const savedCooks = localStorage.getItem("choosedCooks");
@@ -93,18 +103,33 @@ export default function Simulation() {
         setTimeout(() => {
           moveTo(cookers[1], "SlicingStation", Stages); // Передаємо Stages як аргумент
         }, 1000); // Затримка для анімації
-        
+        setTimeout(() => {
+          moveTo(cookers[1], "BakingStantion2", Stages); // Передаємо Stages як аргумент
+        }, 4000); // Затримка для анімації
       }
   
       // Створюємо касири відповідно до збережених даних
       for (let j = 0; j < cashRegisters; j++) {
         new Cashier(container, `Cashier ${j + 1}`, 1650 + j * 260, 50);
       }
-  
-      // Додаємо клієнтів
-      new Client(container, "Oleksiy", "Pizza Carbonara", "Готується", 1650, 200);
-      new Client(container, "Maria", "Pizza Pepperoni", "Готова", 1650, 250);
-      new Client(container, "Ivan", "Pasta Bolognese", "Готується", 1910, 200);
+      // Створюємо клієнтів
+      const clients = [];
+      for (let j = 0; j < ClientsNum; j++) {
+        const newClient = new Client(
+          container,
+          `Client ${j + 1}`,
+          "Pizza Carbonara",
+          "Готується",
+          1500 + j * 75,
+          850
+        );
+        clients.push(newClient);
+      }
+
+      setTimeout(() => {
+        moveToCashRegister(clients[1], 1);
+      }, 4000);
+
     }
   }, [cooks, cashRegisters, kitchenMode]);
   
@@ -132,14 +157,34 @@ export default function Simulation() {
     console.log(`Moving ${cooker.name} to ${station.name}...`);
   
     // Передаємо назву станції для зміни зображення
-    cooker.moveTo(station.x, station.y, () => {
+    cooker.moveTo(station.x, station.y, station.name, () => {
       console.log(`${cooker.name} reached ${station.name}.`);
   
       // Після досягнення станції робимо її знову вільною
       station.isFree = true;
     }, stationName);
-  
   }
+
+  // Функція для переміщення клієнтів до кас
+  function moveToCashRegister(client, cashRegisterIndex) {
+    const register = CashRegisters[cashRegisterIndex];
+    if (!register || !register.isFree) {
+      console.log(`Cash Register ${cashRegisterIndex + 1} is currently occupied or does not exist.`);
+      return;
+    }
+
+    register.isFree = false;
+    client.moveTo(register.x, register.y, () => {
+      console.log(`${client.name} reached ${register.name}.`);
+      setTimeout(() => {
+        register.isFree = true;
+        console.log(`${register.name} is now free.`);
+      }, 3000);
+    });
+  }
+  
+
+  
   return (
     <div className="h-screen overflow-hidden">
       <Header />
