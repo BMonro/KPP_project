@@ -117,6 +117,10 @@ public class Pizza implements Cloneable, Serializable {
         }
     }
 
+    public void nextStatus(){
+        state.next(this);
+    }
+
     // Метод для клонування об'єкта
     @Override
     public Pizza clone() {
