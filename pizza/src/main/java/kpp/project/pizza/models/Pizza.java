@@ -41,8 +41,6 @@ public class Pizza implements Cloneable, Serializable {
     // Поле для зберігання часу приготування
     private int cookingTime;
 
-
-
     public int getOrderId() {return orderId;}
     // Геттер для назви
     public String getName() {

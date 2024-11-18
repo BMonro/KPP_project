@@ -73,7 +73,7 @@ public class Kitchen  extends Thread{
     }
 
     private static void onePizzaOneCooker() {
-        Magazine magazine = new Magazine(); // Створюємо спостерігача
+        Logger logger = new Logger(); // Створюємо спостерігача
 
         while (true) {
             if (!STATIC_VALUES.cookers.isEmpty() && !pizzas.isEmpty()) {
@@ -81,7 +81,7 @@ public class Kitchen  extends Thread{
                 STATIC_VALUES.cookers.remove(cooker);
 
                 Pizza pizzaFromQueue = pizzas.poll();
-                pizzaFromQueue.addObserver(magazine); // Додаємо спостерігача
+                pizzaFromQueue.addObserver(logger);
                 cooker.setPizza(pizzaFromQueue);
 
                 int timeToCook = pizzaFromQueue.getCookingTime();
