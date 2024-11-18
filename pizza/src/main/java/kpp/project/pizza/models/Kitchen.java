@@ -195,7 +195,7 @@ public class Kitchen  extends Thread{
 
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create("http://localhost:3001/cooker/break"))
-                    .header("Content-Type",  "application/json")
+                    .header("Content-Type",   "application/json")
                     .POST(HttpRequest.BodyPublishers.ofString(json))
                     .build();
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
