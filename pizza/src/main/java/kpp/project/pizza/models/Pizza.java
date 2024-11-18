@@ -41,8 +41,6 @@ public class Pizza implements Cloneable, Serializable {
     // Поле для зберігання часу приготування
     private int cookingTime;
 
-
-
     public int getOrderId() {return orderId;}
     // Геттер для назви
     public String getName() {
@@ -52,9 +50,6 @@ public class Pizza implements Cloneable, Serializable {
     // Сетер для назви
     public void setName(String name) {
         this.name = name;
-    }
-    public void nextStatus(){
-        state.next(this);
     }
     // Геттер для інгредієнтів
     public List<String> getIngredients() {
@@ -117,6 +112,10 @@ public class Pizza implements Cloneable, Serializable {
         for (Observer observer : observers) {
             observer.update(this);
         }
+    }
+
+    public void nextStatus(){
+        state.next(this);
     }
 
     // Метод для клонування об'єкта

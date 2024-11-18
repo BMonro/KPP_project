@@ -63,6 +63,7 @@ public class Simulation extends Thread{
             Customer customer = new Customer();
             customer.setIdCashier(String.valueOf(cashierID));
             customer.setOrder(order);
+            sendCustomerData(customer);
         }, 0, deley, TimeUnit.SECONDS);
     }
 
@@ -97,14 +98,12 @@ public class Simulation extends Thread{
         return cashierList.get(minQueueIndex).getId();
     }
 
-    public static void sendCustomerData(IPizzaStatus status, String nameOfPizza, int orderId) {
+    public static void sendCustomerData(Customer customer) {
         try {
-            // Створюємо об'єкт DTO для передачі
-            PizzaDataDTO data = new PizzaDataDTO(status.toString(), nameOfPizza, orderId);
 
             // Серіалізуємо об'єкт DTO в JSON
             Gson gson = new Gson();
-            String json = gson.toJson(data);
+            String json = gson.toJson(customer);
 
             // Створюємо об'єкт HttpClient
             HttpClient client = HttpClient.newHttpClient();
