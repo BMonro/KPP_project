@@ -6,8 +6,10 @@ import Client from "@/components/Client";
 import Cooker from "@/components/Cooker";
 import Cashier from "@/components/Cashier";
 import { sendDataToBackend } from "@/utils/sentData";
+import { fetchCustomers } from "@/utils/getData";
 
-const data = {};
+
+const data = {}; //дані на бек
 for (let i = 0; i < localStorage.length; i++) {
     const key = localStorage.key(i);
     const value = localStorage.getItem(key);
@@ -18,9 +20,6 @@ sendDataToBackend(data);
 
 export default function Simulation() {
   const [CashRegisters, setCCashRegisters] = useState([]);
-
-  
- 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [orders, setOrders] = useState([
     { id: 12, item: "Pizza Carbonara", status: "Готова" },
@@ -28,9 +27,6 @@ export default function Simulation() {
     { id: 14, item: "Pasta Bolognese", status: "Готова" },
     { id: 15, item: "Salad Caesar", status: "Готується" }
   ]);
-
-  //Надсилання даних на бек
-
 
   useEffect(() => {
     const savedCooks = localStorage.getItem("choosedCooks");
@@ -44,11 +40,26 @@ export default function Simulation() {
 
   
   // Стани для даних з localStorage
+  const [clients, setClients] = useState([]); // Список клієнтів
   const [cooks, setCooks] = useState(1);
   const [cashRegisters, setCashRegisters] = useState(1);
   const [kitchenMode, setKitchenMode] = useState("1 cook - 1 option");
   const ClientsNum = 10;
-  // Витягуємо дані з localStorage при завантаженні компонента
+
+  useEffect(() => {
+    async function loadCustomers() {
+      try {
+        const customers = await fetchCustomers(); // Зчитування клієнтів
+        console.log("Отримані клієнти з бекенду:", customers); // Вивід клієнтів у консоль
+        setClients(customers); // Збереження клієнтів у стан
+      } catch (error) {
+        console.error("Помилка під час зчитування клієнтів:", error);
+      }
+    }
+    loadCustomers();
+  }, []);
+  
+
 
   useEffect(() => {
     const savedCooks = localStorage.getItem("choosedCooks");
@@ -59,6 +70,7 @@ export default function Simulation() {
     if (savedCashRegisters) setCashRegisters(JSON.parse(savedCashRegisters));
     if (savedKitchenMode) setKitchenMode(JSON.parse(savedKitchenMode));
   }, []);
+
   useEffect(() => {
     const casaElement = document.querySelector(".casa-image");
     if (casaElement && casaElement.complete) {
@@ -96,9 +108,6 @@ export default function Simulation() {
     const casaElement = document.querySelector(".casa-image"); // Знаходимо елемент Casa
     const tableElement = document.querySelector(".table-image"); // Знаходимо елемент Casa
 
-
-    
-    
     if (container) {
       tableElement.onload = () => {
         const tableRect = tableElement.getBoundingClientRect();
@@ -147,8 +156,8 @@ export default function Simulation() {
 
         const cookers = [];
         for (let i = 0; i < 3; i++) {
-          const cookerX = tableX +  i * tableWidth * 0.25;
-          const cookerY = tableY ;    
+          const cookerX = tableX +  i * tableWidth * 0.09;
+          const cookerY = tableY + tableHeight*0.3;    
           const newCooker = new Cooker(container, `Chef ${i + 1}`, cookerX, cookerY);
           cookers.push(newCooker);
         }
@@ -156,10 +165,10 @@ export default function Simulation() {
         // Виклик moveTo для першого кухаря до DoughStation
         if (cookers.length > 0) {
           setTimeout(() => {
-            moveTo(cookers[1], "SlicingStation", Stages); // Передаємо Stages як аргумент
+            moveToCookingStation(cookers[1], "SlicingStation", Stages); // Передаємо Stages як аргумент
           }, 1000); // Затримка для анімації
           setTimeout(() => {
-            moveTo(cookers[1], "BakingStantion2", Stages); // Передаємо Stages як аргумент
+            moveToCookingStation(cookers[1], "BakingStantion2", Stages); // Передаємо Stages як аргумент
           }, 4000); // Затримка для анімації
         }
       }
@@ -177,28 +186,37 @@ export default function Simulation() {
             new Cashier(container, `Cashier ${j + 1}`, clientX, clientY);
         }
 
-        const clients = [];
-        for (let j = 0; j < ClientsNum; j++) {
-          // Розраховуємо координати для кожного клієнта на основі Casa
-          const clientX = casaX + casaWidth * 0.1  + (j % 5) * (casaWidth / 5); // Розподіляємо по ширині Casa
-          const clientY = casaY + casaHeight * 0.5 + Math.floor(j / 5) * 50;    // Клієнти розташовуються рядами
+        // Передбачається, що клієнти вже завантажені в стан clients
+  clients.forEach((client, index) => {
+    // Знаходимо координати клієнта на основі Casa
+    const clientX = casaX + casaWidth * 0.1 + (index % 5) * (casaWidth / 5); // Розподіляємо по ширині Casa
+    const clientY = casaY + casaHeight * 0.5 + Math.floor(index / 5) * 50;   // Клієнти розташовуються рядами
 
-          const newClient = new Client(
-            container,
-            `Client ${j + 1}`,
-            "Pizza Carbonara",
-            "Готується",
-            clientX,
-            clientY
-          );
-          clients.push(newClient);
-        }
-        setTimeout(() => {
-          moveToCashRegister(clients[1], 1);
-        }, 4000);
-  }
+    const newClient = new Client(
+      container,
+      `Client ${index + 1}`,
+      client.order,       // Використовуємо замовлення з бекенду
+      "Очікує",          // Початковий статус
+      clientX,
+      clientY
+    );
 
-      
+    // Прив'язуємо клієнта до відповідної каси за `cashRegisterId`
+    const assignedRegister = cashRegisters.find(
+      (register) => register.id === client.cashRegisterId
+    );
+
+    if (assignedRegister) {
+      setTimeout(() => {
+        moveToCashRegister(newClient, assignedRegister);
+      }, 1000 + index * 1000); // Додаємо затримку для кожного клієнта
+    }
+
+    // Додаємо клієнта до відображення
+    setClients((prevClients) => [...prevClients, newClient]);
+  });
+
+  } 
 
     }
   }, [cooks, cashRegisters, kitchenMode]);
@@ -211,7 +229,7 @@ export default function Simulation() {
     setIsModalOpen(false);
   };
 
-  function moveTo(cooker, stationName, stages) {
+  function moveToCookingStation(cooker, stationName, stages) {
     // Знаходимо потрібну станцію за назвою
     const station = stages.find((stage) => stage.name === stationName);
   
