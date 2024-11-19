@@ -111,11 +111,11 @@ export default function Settings() {
         <div className="h-full relative bg-mainBg flex  ">
             <aside className="bg-bgGreen h-full w-[27%] flex flex-col items-center justify-start px-7 ">
             <Image className=" transform scale-[0.8] " src={logo} alt="img"/>
-                <CustomButton handleSection={handleSection} text="GENERAL"></CustomButton>
-                <CustomButton handleSection={handleSection}  text="STRATEGY"></CustomButton>
+                <CustomButton handleSection={handleSection} selectedSection={selectedSection} text="GENERAL"></CustomButton>
+                <CustomButton handleSection={handleSection} selectedSection={selectedSection} text="STRATEGY"></CustomButton>
                 {selectedSection != "MENU" 
-                ? <CustomButton handleSection={handleSection}  text="MENU"></CustomButton> 
-                :   <div onClick={() => handleSection("MENU")} className=" flex flex-col items-center  bg-green py-2 px-5 mb-2 w-[100%] text-[40px] text-bText rounded-[21px] hover:shadow-custom-inset transition-shadow duration-200 ">
+                ? <CustomButton handleSection={handleSection} selectedSection={selectedSection}  text="MENU"></CustomButton> 
+                :   <div onClick={() => handleSection("MENU")} className= {`flex flex-col items-center  bg-green py-2 px-5 mb-2 w-[100%] text-[40px] text-bText rounded-[21px] hover:shadow-custom-inset transition-shadow duration-200 ${selectedSection == "MENU" ? "shadow-custom-inset" : null}`} >
                         <p>MENU</p>
                         <span className="  bg-[#617451] w-full h-[5px] mb-1"></span>
                         <button className="text-[25px] self-start pl-2 text-[#FFF2EB]" onClick={() => handleSelectMenu("Pizzas")}>-- Pizza</button>

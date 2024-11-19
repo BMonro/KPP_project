@@ -9,14 +9,7 @@ import { sendDataToBackend } from "@/utils/sentData";
 import { fetchCustomers } from "@/utils/getData";
 
 
-const data = {}; //дані на бек
-for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    const value = localStorage.getItem(key);
-    data[key] = value;
-    console.log(`${key}: ${value}`);
-}
-sendDataToBackend(data);
+
 
 export default function Simulation() {
   const [CashRegisters, setCCashRegisters] = useState([]);
@@ -27,6 +20,22 @@ export default function Simulation() {
     { id: 14, item: "Pasta Bolognese", status: "Готова" },
     { id: 15, item: "Salad Caesar", status: "Готується" }
   ]);
+  
+  const [dataSent, setDataSent] = useState(false);
+  useEffect(() => {
+    if (dataSent) return; // Якщо вже відправлено, не повторювати виклик
+
+    const data = {}; //дані на бек
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      const value = localStorage.getItem(key);
+      data[key] = value;
+      console.log(`${key}: ${value}`);
+    }
+
+    sendDataToBackend(data);
+    setDataSent(true); // Після відправки змінюємо прапор, щоб не відправляти дані знову
+  }, [dataSent]); // Залежність від dataSent для виконання лише один раз
 
   useEffect(() => {
     const savedCooks = localStorage.getItem("choosedCooks");

@@ -46,13 +46,13 @@ export default function Menu({ items, setItems, currentType }) {
                     ))}
                 </div>
                 <button onClick={openDialog} className="bg-green py-2 px-5 mb-6 w-[30%] text-[40px] text-black rounded-[21px] hover:shadow-add-button self-end">Add {currentType == "Pizzas" ? "pizza" : "drink"}</button>
-                <button className="bg-green py-2 px-5 mb-2 w-[20%] text-[40px] text-bText rounded-[21px] hover:shadow-custom-inset transition-shadow duration-200 self-end">Save</button>
+                {/* <button className="bg-green py-2 px-5 mb-2 w-[20%] text-[40px] text-bText rounded-[21px] hover:shadow-custom-inset transition-shadow duration-200 self-end">Save</button> */}
             </section>
         </>
     );
 }
 
-export function Item({ title, time, money, img, index, handleDeleteItem }) {
+export function Item({ name, time, price, img, index, handleDeleteItem }) {
     return (
         <div className="bg-[#F1DACE] relative h-[150px] flex w-full items-center mb-9 border-[#708360] border-[4px] rounded-[21px]">
             <div className="w-[15%] flex justify-center items-center">
@@ -60,9 +60,9 @@ export function Item({ title, time, money, img, index, handleDeleteItem }) {
             </div>
 
             <div className="flex justify-between items-center flex-grow px-4 w-full">
-                <p className="w-[28%] text-4xl mr-5">{title}</p>
-                <p className="w-[28%] text-4xl mr-5">{time}</p>
-                <p className="w-[28%] text-4xl ">{money} USD</p>
+                <p className="w-[33%] text-4xl mr-5">{name}</p>
+                <p className="w-[33%] text-4xl mr-5">{time}</p>
+                <p className="w-[33%] text-4xl">{price} USD</p>  {/* виправлено price */}
             </div>
 
             <button onClick={() => handleDeleteItem(index)} className="rounded-[10px] flex items-center justify-center h-full pl-3 pr-2 bg-[#708360]">
