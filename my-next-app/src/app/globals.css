@@ -37,30 +37,74 @@ body {
 }
 
 
-
-/*стилі для бекграунду*/
-
 .simulation-background {
   height: 100%;
   width: 100%;
   background-color: #FFF2EB;
-  position: relative; /* Для позиціонування елементів всередині */
+  position: relative; /* Для позиціонування елементів */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .table-image {
   position: absolute;
-  top: 15%;
-  left: 0%;
-  width: 50%; /* Зображення буде змінювати ширину */
-  height: 75%; /* Висота завжди залишатиметься на 100% */
-  max-height: none; /* Знімає обмеження на висоту */
-  object-fit: none; /* Зображення не буде обрізатись */
+  top: 50%;
+  transform: translateY(-50%);
+  left: 5%;
+  width: 40%;
+  height: auto; 
+  max-height: 75%;
+  object-fit: contain;
 }
 
-
-
-.modal-overlay {
+.casa-image {
   position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  left: 45%;
+ 
+  max-width: 45%;
+  height: auto; 
+}
+
+/* Для невеликих екранів */
+@media (max-width: 768px) {
+  .table-image {
+    top: 12%;
+    left: 5%;
+    width: 60%; /* Більше місця для мобільних */
+    height: auto;
+  }
+
+  .casa-image {
+    top: 15%;
+    left: 50%;
+    max-width: 80%; /* Зображення зменшується */
+    height: auto;
+  }
+
+  .simulation-background {
+    padding: 10px; /* Додає відступ для мобільних */
+  }
+}
+
+/* Для дуже маленьких екранів (до 480px) */
+@media (max-width: 480px) {
+  .table-image {
+    top: 15%;
+    width: 70%;
+  }
+
+  .casa-image {
+    max-width: 90%;
+  }
+}
+
+/* Стилі модального вікна */
+.modal-overlay {
+  position: fixed; /* Завжди по центру */
   top: 0;
   left: 0;
   width: 100%;
@@ -76,11 +120,12 @@ body {
   background: #f3e9e1;
   padding: 20px;
   border-radius: 12px;
-  width: 400px;
+  width: 90%; /* Динамічна ширина */
+  max-width: 400px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  position: absolute;
 }
 
+/* Список замовлень */
 .order-list {
   max-height: 300px;
   overflow-y: auto;
@@ -101,15 +146,6 @@ body {
   color: #C46034;
 }
 
-.order-item-name {
-  flex: 1;
-  margin-left: 10px;
-}
-
-.order-status {
-  color: #555;
-}
-
 .close-button {
   background-color: #C46034;
   color: white;
@@ -117,42 +153,41 @@ body {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  margin-top: 20px;
 }
 
 .close-button:hover {
   background-color: #c85523;
 }
 
-.casa-image{
-  position: absolute;
-  top: 15%;
-  left: 50%;
-  max-width: 50%; /* Не виходити за межі контейнера */
-  height: 100vh; /* Не виходити за межі екрану по висоті */
-}
-
-.door-image{
-  position: absolute;
-  top: 92%;
-  left: 86%;
-  max-width: 100%; /* Не виходити за межі контейнера */
-  max-height: 80vh; /* Не виходити за межі екрану по висоті */
-}
-
-/* стилі персонажів */
-
-.cooker-image {
-  width: 170px;
+/* Стилі персонажів */
+.cooker-image, .cashier-image, .client-image {
+  width: 120px;
   height: auto;
   transition: transform 0.2s;
   cursor: pointer;
 }
 
-.cooker-image:hover {
+@media (min-width: 1440px) {
+  .cooker-image, .cashier-image, .client-image {
+    width: 90px;
+  }
+}
+
+@media (min-width: 2000px) {
+  .cooker-image, .cashier-image, .client-image {
+    width: 120px;
+  }
+}
+
+
+.cooker-image:hover, .cashier-image:hover, .client-image:hover {
   transform: scale(1.1);
 }
 
+/* Для мобільних персонажі зменшуються */
+
+
+/* Tooltip */
 .tooltip {
   display: none;
   position: absolute;
@@ -167,24 +202,4 @@ body {
   white-space: nowrap;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
   z-index: 10;
-}
-
-.cashier-image {
-  width: 125px; 
-  height: auto; 
-  transition: transform 0.2s;
-  cursor: pointer;
-}
-.cashier-image:hover {
-  transform: scale(1.1);
-}
-
-.client-image {
-  width: 150px; 
-  height: auto; 
-  transition: transform 0.2s;
-  cursor: pointer;
-}
-.client-image:hover {
-  transform: scale(1.1);
 }
