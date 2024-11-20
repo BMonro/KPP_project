@@ -1,5 +1,7 @@
 package kpp.project.pizza.models;
 
+import com.google.gson.Gson;
+
 import java.net.http.*;
 import java.net.URI;
 import java.util.List;
@@ -52,7 +54,7 @@ public class Cooker {
     // Метод для перевірки і зупинки роботи рандомно
     public void checkAndPauseIfNeeded() {
         Random random = new Random();
-        if (random.nextInt(10) < 3) { // 30% шанс зупинки
+        if (random.nextInt(100) < 3) { // 3% шанс зупинки
             stopWork();
         }
     }
@@ -60,22 +62,11 @@ public class Cooker {
     // Метод для відправки даних про кухаря на фронт
     private void sendCookerData(String cookerName, String status) {
         try {
-            HttpClient client = HttpClient.newHttpClient();
             String json = "{ \"name\": \"" + cookerName + "\", \"status\": \"" + status + "\" }";
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:3000/cooker/status"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            if (response.statusCode() == 200) {
-                System.out.println("Cooker data sent successfully: " + response.body());
-            } else {
-                System.err.println("Failed to send cooker data. Response code: " + response.statusCode());
-            }
+            WebSocketPauseHandler.sendMessageToAll(json);
+            System.out.println("Sent customer data: " + json);
         } catch (Exception e) {
-            System.err.println("Error sending cooker data: " + e.getMessage());
+            e.printStackTrace();
         }
     }
     public String getName() {
