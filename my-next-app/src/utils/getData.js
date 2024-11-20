@@ -7,6 +7,7 @@ export async function fetchCustomers() {
       headers: {
         "Content-Type": "application/json",
       },
+      
     });
     if (!response.ok) {
       throw new Error(`Error: ${response.status}`);

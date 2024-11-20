@@ -10,6 +10,26 @@ import { fetchCustomers } from "@/utils/getData";
 import { fetchOrders } from "@/utils/getOrders";
 
 export default function Simulation() {
+
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8080/ws");
+
+    socket.onmessage = (event) => {
+      setMessage(event.data);
+      let data = JSON.parse(event.data);
+      console.log(data);
+      console.log(data.order);
+      gg(data.order);
+    };
+    
+    return () => socket.close(); // Закриваємо сокет при розмонтуванні
+  }, []);
+
+  
+
+
   const [CashRegisters, setCCashRegisters] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [orders, setOrders] = useState([
@@ -71,7 +91,25 @@ export default function Simulation() {
     loadCustomers();
   }, []);
   
-
+async function gg(order){
+  try {
+    const response = await fetch("http://localhost:8080/kitchen", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ order: order })
+    });
+    if (!response.ok) {
+      throw new Error(`Error: ${response.status}`);
+    }
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error("Failed to fetch customers:", error);
+    return [];
+  }
+}
 
   useEffect(() => {
     const savedCooks = localStorage.getItem("choosedCooks");
