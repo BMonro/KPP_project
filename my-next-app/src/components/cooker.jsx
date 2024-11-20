@@ -1,42 +1,74 @@
-// Клас Client
-export default class Client {
-  constructor(container, name, order, cashierID, x, y) {
+export default class Cooker {
+  constructor(container, name, x, y) {
     this.container = container;
     this.name = name;
-    this.order = order;
-    this.cashierID = cashierID;
-    this.imageSrc = "/simulation/images/client.png";
+    this.imageSrc = "/simulation/images/Cooker.png";
     this.x = x;
     this.y = y;
-    this.createClient();
+    this.createCooker();
   }
 
-  createClient() {
-    const clientDiv = document.createElement("div");
-    clientDiv.classList.add("client");
-    clientDiv.style.position = "absolute";
-    clientDiv.style.left = `${this.x}px`;
-    clientDiv.style.top = `${this.y}px`;
+  createCooker() {
+    // Створюємо елемент кухаря
+    this.element = document.createElement("div");
+    this.element.classList.add("cooker");
+    this.element.style.position = "absolute";
+    this.element.style.left = `${this.x}px`;
+    this.element.style.top = `${this.y}px`;
 
-    const clientImage = document.createElement("img");
-    clientImage.src = this.imageSrc;
-    clientImage.alt = this.name;
-    clientImage.classList.add("client-image");
+    const cookerImage = document.createElement("img");
+    cookerImage.src = this.imageSrc;
+    cookerImage.alt = this.name;
+    cookerImage.classList.add("cooker-image");
 
     const tooltip = document.createElement("div");
     tooltip.classList.add("tooltip");
-    tooltip.textContent = `${this.name}: ${this.order}`;
+    tooltip.textContent = this.name;
 
-    clientDiv.appendChild(clientImage);
-    clientDiv.appendChild(tooltip);
-    this.container.appendChild(clientDiv);
+    this.element.appendChild(cookerImage);
+    this.element.appendChild(tooltip);
+    this.container.appendChild(this.element);
 
-    clientDiv.addEventListener("mouseenter", () => {
+    // Tooltip visibility on hover
+    this.element.addEventListener("mouseenter", () => {
       tooltip.style.display = "block";
     });
 
-    clientDiv.addEventListener("mouseleave", () => {
+    this.element.addEventListener("mouseleave", () => {
       tooltip.style.display = "none";
     });
+  }
+
+  updatePosition() {
+    if (this.element) {
+      this.element.style.left = `${this.x}px`;
+      this.element.style.top = `${this.y}px`;
+    }
+  }
+
+  // Переміщуємо кухаря до абсолютних координат
+  moveTo(newX, newY, stationName, callback) {
+    // Зміна зображення
+    const cookerImage = this.element.querySelector(".cooker-image");
+    if (stationName === "SlicingStation") {
+      cookerImage.src = "/simulation/images/CookerInversed.png"; // Зображення для SlicingStation
+    } else {
+      cookerImage.src = "/simulation/images/Cooker.png"; // Дефолтне зображення
+    }
+
+    // Додаємо анімацію для left і top
+    this.element.style.transition = "left 1s ease-in-out, top 1s ease-in-out";
+
+    // Оновлюємо глобальні координати кухаря
+    this.x = newX;
+    this.y = newY;
+
+    // Застосовуємо нові координати
+    this.updatePosition();
+
+    // Виконуємо callback після завершення анімації
+    setTimeout(() => {
+      if (callback);
+    }, 1000);
   }
 }

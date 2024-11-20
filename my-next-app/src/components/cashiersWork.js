@@ -1,4 +1,5 @@
-import Cashier from "@/components/Cashier";
+import Cashier from "./Cashier";
+
 
 export const initializeCashiers = (casaElement, container, setCashRegisters) => {
     const casaRect = casaElement.getBoundingClientRect();

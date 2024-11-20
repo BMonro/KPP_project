@@ -1,5 +1,6 @@
 import { moveToCookingStation } from "@/components/movingFunctions";
-import Cooker from "@/components/Cooker";
+import Cooker from "./cooker";
+
 
 export const initializeCookersAndStations = (tableElement, container) => {
     const tableRect = tableElement.getBoundingClientRect();
