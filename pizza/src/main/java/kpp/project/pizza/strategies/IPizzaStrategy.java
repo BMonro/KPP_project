@@ -1,4 +1,4 @@
-package kpp.project.pizza.models.strategies;
+package kpp.project.pizza.strategies;
 
 import kpp.project.pizza.models.Pizzeria;
 

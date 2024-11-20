@@ -1,6 +1,4 @@
-package kpp.project.pizza.models.strategies;
-
-import kpp.project.pizza.models.Pizzeria;
+package kpp.project.pizza.strategies;
 
 public class StandartStrategy implements IPizzaStrategy {
 

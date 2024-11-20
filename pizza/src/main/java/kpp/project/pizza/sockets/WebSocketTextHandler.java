@@ -1,4 +1,4 @@
-package kpp.project.pizza.models;
+package kpp.project.pizza.sockets;
 
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -6,7 +6,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class WebSocketStateHandler extends TextWebSocketHandler {
+public class WebSocketTextHandler extends TextWebSocketHandler {
 
     private static final CopyOnWriteArrayList<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
 

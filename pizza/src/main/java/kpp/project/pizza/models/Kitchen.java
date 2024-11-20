@@ -1,7 +1,8 @@
 package kpp.project.pizza.models;
 
 import com.google.gson.Gson;
-import kpp.project.pizza.models.statuses.Ordered;
+import kpp.project.pizza.sockets.WebSocketStateHandler;
+import kpp.project.pizza.statuses.Ordered;
 
 import java.util.List;
 import java.util.Queue;
@@ -11,6 +12,7 @@ public class Kitchen  extends Thread{
     private static List<Cooker> employees;
     private static Queue<Pizza> pizzas;
     private static Simulation simulation;
+    private boolean running = false;
     public Kitchen() {}
     public void addPizza(Pizza pizza) {
         pizza.setState(new Ordered());
@@ -21,13 +23,20 @@ public class Kitchen  extends Thread{
         return pizzas.poll();
     }
     public void setEmployees(List<Cooker> employees) {}
-
+    public synchronized boolean isRunning() {
+        return running;
+    }
     @Override
     public void run() {
-        if(mode==1){
-            onePizzaOneState();
-        }else if (mode == 2){
-            onePizzaOneCooker();
+        running = true;
+        try {
+            if (mode == 1) {
+                onePizzaOneState();
+            } else if (mode == 2) {
+                onePizzaOneCooker();
+            }
+        } finally {
+            running = false; // Ensure the state is reset when the thread finishes
         }
     }
     private static void onePizzaOneState(){

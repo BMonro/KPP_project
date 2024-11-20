@@ -1,4 +1,4 @@
-package kpp.project.pizza.models.statuses;
+package kpp.project.pizza.statuses;
 
 import kpp.project.pizza.models.Pizza;
 

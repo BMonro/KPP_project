@@ -1,16 +1,12 @@
 package kpp.project.pizza.controllers;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import kpp.project.pizza.models.*;
-import kpp.project.pizza.models.strategies.IPizzaStrategy;
-import kpp.project.pizza.models.strategies.RandomStrategy;
-import kpp.project.pizza.models.strategies.RushHourStrategy;
-import kpp.project.pizza.models.strategies.StandartStrategy;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import kpp.project.pizza.strategies.IPizzaStrategy;
+import kpp.project.pizza.strategies.RandomStrategy;
+import kpp.project.pizza.strategies.RushHourStrategy;
+import kpp.project.pizza.strategies.StandartStrategy;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -70,8 +66,11 @@ public class HomeController {
                 };
                 Simulation simulation = new Simulation(strategy);
                 simulation.start();
-//                Kitchen kitchen = Pizzeria.getInstance().getKitchen();
-//                kitchen.start();
+                Kitchen kitchen = Pizzeria.getInstance().getKitchen();
+                if (!kitchen.isRunning()) {
+                    kitchen.start();
+                }
+
                 Map<String, String> response = new HashMap<>();
                 response.put("status", "OK");
                 return response;
