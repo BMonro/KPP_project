@@ -29,8 +29,7 @@ export default class Client {
     tooltip.classList.add("tooltip");
     tooltip.innerHTML = `
       <strong>${this.name}</strong><br>
-      Замовлення: ${this.order}<br>
-      Статус: ${this.status}
+      Order: ${this.order}<br>
     `;
 
     clientDiv.appendChild(clientImage);
