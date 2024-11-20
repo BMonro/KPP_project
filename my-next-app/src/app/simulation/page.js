@@ -6,21 +6,77 @@ import Client from "@/components/Client";
 import Cooker from "@/components/Cooker";
 import Cashier from "@/components/Cashier";
 import { sendDataToBackend } from "@/utils/sentData";
-import { fetchCustomers } from "@/utils/getData";
-
 
 
 
 export default function Simulation() {
+  const [clients, setClients] = useState("");
   const [CashRegisters, setCCashRegisters] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [orders, setOrders] = useState([
-    { id: 12, item: "Pizza Carbonara", status: "Готова" },
-    { id: 13, item: "Pizza Pepperoni", status: "Готується" },
-    { id: 14, item: "Pasta Bolognese", status: "Готова" },
-    { id: 15, item: "Salad Caesar", status: "Готується" }
-  ]);
-  
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8080/ws");
+
+    //додавання клієнтів з беку
+    socket.onmessage = (event) => {
+        try {
+            const data = JSON.parse(event.data);
+            console.log("Get data:", data);
+            const clientOrder = data.order; // Отримуємо об'єкт замовлення
+            const cashierID = data.idCashier || "1";
+            // Знаходимо координати клієнта
+            const casaElement = document.querySelector(".casa-image");
+            const casaRect = casaElement.getBoundingClientRect();
+            const casaX = casaRect.left;
+            const casaY = casaRect.top;
+            const casaWidth = casaRect.width;
+            const casaHeight = casaRect.height;
+
+            const index = clients.length; // Поточний індекс клієнта
+            const clientX = casaX + casaWidth * 0.1 + (index % 5) * (casaWidth / 5); // Розподіл по ширині
+            const clientY = casaY + casaHeight * 0.5 + Math.floor(index / 5) * 50;   // Розподіл по рядах
+
+
+            const formattedOrder = `
+                ID: ${clientOrder.orderID}
+                Pizzas: ${clientOrder.pizzas.map((pizza) => `"${pizza.name}"`).join(", ")}
+                Drinks: ${clientOrder.drinks.map((drink) => `"${drink.name}"`).join(", ")}
+            `;
+
+            const newClient = new Client(
+                document.getElementById("cooker-container"),
+                `Client`,
+                formattedOrder.trim(), 
+                clientX,
+                clientY
+            );
+
+            // Знаходимо відповідну касу
+            const assignedRegister = CashRegisters.find(
+                (register) => register.name === `Cash Register ${cashierID}`
+            );
+
+            if (assignedRegister) {
+                setTimeout(() => {
+                    moveToCashRegister(newClient, assignedRegister);
+                }, 1000 + index * 1000); // Додаємо затримку для кожного клієнта
+            }
+
+            // Оновлюємо масив клієнтів
+            setClients((prevClients) => [...prevClients, newClient]);
+        } catch (error) {
+            console.error("Помилка обробки повідомлення:", error);
+        }
+    };
+
+    return () => {
+        socket.close();
+    };
+}, [clients]);
+
+
+
+  // дані на бек
   const [dataSent, setDataSent] = useState(false);
   useEffect(() => {
     if (dataSent) return; // Якщо вже відправлено, не повторювати виклик
@@ -36,8 +92,9 @@ export default function Simulation() {
     console.log(data);
     sendDataToBackend(data);
     setDataSent(true); // Після відправки змінюємо прапор, щоб не відправляти дані знову
-  }, [dataSent]); // Залежність від dataSent для виконання лише один раз
+  }, [dataSent]); 
 
+  //зчитування з локал сторедж
   useEffect(() => {
     const savedCooks = localStorage.getItem("choosedCooks");
     const savedCashRegisters = localStorage.getItem("choosedCashRegisters");
@@ -50,26 +107,9 @@ export default function Simulation() {
 
   
   // Стани для даних з localStorage
-  const [clients, setClients] = useState([]); // Список клієнтів
   const [cooks, setCooks] = useState(1);
   const [cashRegisters, setCashRegisters] = useState(1);
   const [kitchenMode, setKitchenMode] = useState("1 cook - 1 option");
-  const ClientsNum = 10;
-
-  useEffect(() => {
-    async function loadCustomers() {
-      try {
-        const customers = await fetchCustomers(); // Зчитування клієнтів
-        console.log("Отримані клієнти з бекенду:", customers); // Вивід клієнтів у консоль
-        setClients(customers); // Збереження клієнтів у стан
-      } catch (error) {
-        console.error("Помилка під час зчитування клієнтів:", error);
-      }
-    }
-    loadCustomers();
-  }, []);
-  
-
 
   useEffect(() => {
     const savedCooks = localStorage.getItem("choosedCooks");
@@ -80,6 +120,7 @@ export default function Simulation() {
     if (savedCashRegisters) setCashRegisters(JSON.parse(savedCashRegisters));
     if (savedKitchenMode) setKitchenMode(JSON.parse(savedKitchenMode));
   }, []);
+
 
   useEffect(() => {
     const casaElement = document.querySelector(".casa-image");
@@ -172,7 +213,6 @@ export default function Simulation() {
           cookers.push(newCooker);
         }
 
-        // Виклик moveTo для першого кухаря до DoughStation
         if (cookers.length > 0) {
           setTimeout(() => {
             moveToCookingStation(cookers[1], "SlicingStation", Stages); // Передаємо Stages як аргумент
@@ -194,40 +234,8 @@ export default function Simulation() {
           const clientX = casaX + casaWidth * 0.25 + j * casaWidth * 0.25; // Розподіляємо по ширині Casa
           const clientY = casaY - casaHeight * 0.4;    // Клієнти розташовуються рядами
             new Cashier(container, `Cashier ${j + 1}`, clientX, clientY);
-        }
-
-        // Передбачається, що клієнти вже завантажені в стан clients
-  clients.forEach((client, index) => {
-    // Знаходимо координати клієнта на основі Casa
-    const clientX = casaX + casaWidth * 0.1 + (index % 5) * (casaWidth / 5); // Розподіляємо по ширині Casa
-    const clientY = casaY + casaHeight * 0.5 + Math.floor(index / 5) * 50;   // Клієнти розташовуються рядами
-
-    const newClient = new Client(
-      container,
-      `Client ${index + 1}`,
-      client.order,       // Використовуємо замовлення з бекенду
-      "Очікує",          // Початковий статус
-      clientX,
-      clientY
-    );
-
-    // Прив'язуємо клієнта до відповідної каси за `cashRegisterId`
-    const assignedRegister = cashRegisters.find(
-      (register) => register.id === client.cashRegisterId
-    );
-
-    if (assignedRegister) {
-      setTimeout(() => {
-        moveToCashRegister(newClient, assignedRegister);
-      }, 1000 + index * 1000); // Додаємо затримку для кожного клієнта
-    }
-
-    // Додаємо клієнта до відображення
-    setClients((prevClients) => [...prevClients, newClient]);
-  });
-
-  } 
-
+        }       
+      } 
     }
   }, [cooks, cashRegisters, kitchenMode]);
   
