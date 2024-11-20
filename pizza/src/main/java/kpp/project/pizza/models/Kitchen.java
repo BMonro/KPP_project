@@ -42,7 +42,7 @@ public class Kitchen  extends Thread{
     private static void onePizzaOneState(){
         while(true){
             if(!pizzas.isEmpty()){
-                Cooker cooker = employees.getFirst();
+                Cooker cooker = employees.get(0);
                 while (cooker.getPizza()==null){}
                 cooker.setPizza(pizzas.poll());
                 Thread t = new Thread(()->{
