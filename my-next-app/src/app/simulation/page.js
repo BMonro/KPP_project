@@ -32,7 +32,8 @@ export default function Simulation() {
       data[key] = value;
       console.log(`${key}: ${value}`);
     }
-
+    console.log("Дані для відправки на бекенд:");
+    console.log(data);
     sendDataToBackend(data);
     setDataSent(true); // Після відправки змінюємо прапор, щоб не відправляти дані знову
   }, [dataSent]); // Залежність від dataSent для виконання лише один раз
