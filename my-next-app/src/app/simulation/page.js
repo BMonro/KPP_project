@@ -14,6 +14,7 @@ export default function Simulation() {
   const [clients, setClients] = useState([]);
   const [cashRegisters, setCashRegisters] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [dataSent, setDataSent] = useState(false);
 
   // Стани для даних з localStorage
@@ -102,6 +103,7 @@ export default function Simulation() {
     }
     return data;
   };
+
 
   // Зчитування даних з localStorage
   useEffect(() => {
@@ -220,6 +222,7 @@ export default function Simulation() {
             <h2>Список замовлень</h2>
             <div className="order-list">
               {/* Замовлення, які потрібно відображати */}
+
             </div>
             <button onClick={closeModal} className="close-button">
               Закрити

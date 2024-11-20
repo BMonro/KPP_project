@@ -18,10 +18,12 @@ import java.lang.reflect.Type;
 @CrossOrigin(origins = "http://localhost:3000")
 public class HomeController {
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private boolean isCreated = false;
 
     @PostMapping
     public Map<String, String> processRequest(@RequestBody Map<String, Object> requestData) {
         try {
+            if (!isCreated) {isCreated = true;
             Map<String, Object> data = (Map<String, Object>) requestData.get("data");
             Gson gson = new Gson();
 
@@ -32,14 +34,15 @@ public class HomeController {
             // Парсинг JSON у список об'єктів Drink
             List<Drink> drinks = gson.fromJson((String)data.get("Drinks"), listType1);
             List<Pizza> pizzas = gson.fromJson((String)data.get("Pizzas"), listType2);
+
             System.out.println(data.get("Pizzas"));
             Pizzeria.getInstance().getMenu().setMenu(pizzas, drinks);
 
             if (data != null) {
-                String choosedCashRegisters = ((String) data.get("choosedCashRegisters")).replaceAll("\"","");
-                String choosedCooks = ((String) data.get("choosedCooks")).replaceAll("\"","");
-                String choosedKitchenMode = ((String) data.get("choosedKitchenMode")).replaceAll("\"","");
-                String strategyNumber = ((String) data.get("choosedStrategy")).replaceAll("\"","");
+                String choosedCashRegisters = ((String) data.get("choosedCashRegisters")).replaceAll("\"", "");
+                String choosedCooks = ((String) data.get("choosedCooks")).replaceAll("\"", "");
+                String choosedKitchenMode = ((String) data.get("choosedKitchenMode")).replaceAll("\"", "");
+                String strategyNumber = ((String) data.get("choosedStrategy")).replaceAll("\"", "");
 
                 Integer choosedCashRegistersInt = (choosedCashRegisters != null && !choosedCashRegisters.isEmpty())
                         ? Integer.parseInt(choosedCashRegisters) : null;
@@ -48,9 +51,9 @@ public class HomeController {
 
                 Integer intKitchenMode = 0;
                 if (choosedKitchenMode.equals("1 cook - 1 pizza")) {
-                    intKitchenMode = 1;
-                } else if (choosedKitchenMode.equals("1 cook - 1 option")) {
                     intKitchenMode = 2;
+                } else if (choosedKitchenMode.equals("1 cook - 1 option")) {
+                    intKitchenMode = 1;
                 }
 
                 System.out.println("Int mode " + intKitchenMode);
@@ -66,14 +69,15 @@ public class HomeController {
                 };
                 Simulation simulation = new Simulation(strategy);
                 simulation.start();
-//                Kitchen kitchen = Pizzeria.getInstance().getKitchen();
-//                if (!kitchen.isRunning()) {
-//                    kitchen.start();
-//                }
+                Kitchen kitchen = Pizzeria.getInstance().getKitchen();
+                if (!kitchen.isRunning()) {
+                    kitchen.start();
+                }
 
                 Map<String, String> response = new HashMap<>();
                 response.put("status", "OK");
                 return response;
+                }
             }
 
             Map<String, String> response = new HashMap<>();

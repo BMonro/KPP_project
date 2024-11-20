@@ -1,5 +1,6 @@
 package kpp.project.pizza.models;
 
+import java.util.LinkedList;
 import java.util.Queue;
 
 public class Cashier {
@@ -8,6 +9,7 @@ public class Cashier {
 
     public Cashier(int id) {
         this.id = id;
+        customers = new LinkedList<>();
     }
 
     public int getId() {

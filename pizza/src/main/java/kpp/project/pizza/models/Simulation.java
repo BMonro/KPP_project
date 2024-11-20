@@ -57,7 +57,7 @@ public class Simulation extends Thread{
             Customer customer = new Customer();
             customer.setIdCashier(String.valueOf(cashierID));
             customer.setOrder(order);
-            //Pizzeria.getInstance().getCashiers().get(cashierID).addCustomer(customer);
+            Pizzeria.getInstance().getCashiers().get(cashierID).addCustomer(customer);
             sendCustomerData(customer);
         }, 0, deley, TimeUnit.SECONDS);
     }
