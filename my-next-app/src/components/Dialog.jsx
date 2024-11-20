@@ -29,7 +29,7 @@ const Dialog = forwardRef(({ isDialogOpen, setIsDialogOpen, handleAddItem, curre
 
         const item = {
             name: nameValue,
-            time: timeValue,
+            cookingTime: timeValue,
             price: priceValue,
             img: img
         }

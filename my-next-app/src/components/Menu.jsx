@@ -52,7 +52,7 @@ export default function Menu({ items, setItems, currentType }) {
     );
 }
 
-export function Item({ name, time, price, img, index, handleDeleteItem }) {
+export function Item({ name, cookingTime, price, img, index, handleDeleteItem }) {
     return (
         <div className="bg-[#F1DACE] relative h-[150px] flex w-full items-center mb-9 border-[#708360] border-[4px] rounded-[21px]">
             <div className="w-[15%] flex justify-center items-center">
@@ -61,7 +61,7 @@ export function Item({ name, time, price, img, index, handleDeleteItem }) {
 
             <div className="flex justify-between items-center flex-grow px-4 w-full">
                 <p className="w-[33%] text-4xl mr-5">{name}</p>
-                <p className="w-[33%] text-4xl mr-5">{time} minutes</p>
+                <p className="w-[33%] text-4xl mr-5">{cookingTime} minutes</p>
                 <p className="w-[33%] text-4xl">{price} USD</p>  {/* виправлено price */}
             </div>
 

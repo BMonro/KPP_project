@@ -51,19 +51,19 @@ const initialPizzas = [
 const initialDrinks = [
     {
         name: "Strawberry soda",
-        time: null,
+        cookingTime: null,
         price: "4",
         img: soda
     },
     {
         name: "Coca - cola",
-        time: null,
+        cookingTime: null,
         price: "2",
         img: cola
     },
     {
         name: "Orange juice",
-        time: null,
+        cookingTime: null,
         price: "3",
         img: juice
     },
