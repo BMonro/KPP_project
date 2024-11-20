@@ -5,6 +5,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 public class Logger implements Observer {
@@ -12,12 +14,13 @@ public class Logger implements Observer {
     @Override
     public void update(Pizza pizza) {
         // Отримуємо сьогоднішню дату у форматі yyyy-MM-dd
+        LocalTime time = LocalTime.now();
         LocalDate today = LocalDate.now();
         String fileName = today.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) + ".txt";
 
         // Лог для запису
         String logEntry = "Pizza " + pizza.getName() +
-                " (Order ID: " + pizza.getOrderId() + ") is now " + pizza.getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.","") ;
+                " (Order ID: " + pizza.getOrderId() + ") is now " + pizza.getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.","") + " " + time.format(DateTimeFormatter.ofPattern("HH:mm:ss")) ;
 
         // Записуємо лог у файл
         writeLogToFile(fileName, logEntry);
