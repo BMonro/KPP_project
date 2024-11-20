@@ -14,6 +14,10 @@ public class Cashier {
         return id;
     }
 
+    public void addCustomer(Customer customer) {
+        customers.add(customer);
+    }
+
     public int getCustomersQueue() {
         return customers != null ? customers.size() : 0;
     }
