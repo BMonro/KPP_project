@@ -1,3 +1,4 @@
+import { moveToCashRegister } from "@/components/movingFunctions";
 import { useEffect } from "react";
 
 const useClientWebSocket = (clients, setClients, setCashRegisters) => {
@@ -43,7 +44,7 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
 
                 // Оновлення стану клієнтів, додаючи нового клієнта в масив
                 setClients((prevClients) => [...prevClients, newClient]);
-
+                sendDataToKitchen(JSON.stringify(data.order));
                 // Переміщення клієнта до касового апарату
                 moveToCashRegister(newClient, cashierID, setCashRegisters);
             } catch (error) {

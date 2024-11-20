@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Header from "@/components/SimulationHeader";
 import Client from "@/components/Client";
 
-import { sendDataToBackend } from "@/utils/sentData";
+import { sendDataToBackend, sendDataToKitchen } from "@/utils/sentData";
 import { moveToCookingStation } from "@/components/movingFunctions";
 import { moveToCashRegister } from "@/components/movingFunctions";
 import { initializeCookersAndStations } from "@/components/cookersWork";
@@ -26,6 +26,7 @@ export default function Simulation() {
     if (dataSent) return;
 
     const data = getLocalStorageData();
+    console.log(data)
     sendDataToBackend(data);
     setDataSent(true);
   }, [dataSent]);
@@ -52,22 +53,34 @@ export default function Simulation() {
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:8080/new/state");
   
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+    };
+  
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        // const { order: clientOrder, idCashier } = data;
-        console.log("data");
-        console.log(data);
+        console.log("Received data:", data);
 
-        
       } catch (error) {
-        console.error("Помилка обробки повідомлення:", error);
+        console.error("Error processing message:", error);
       }
     };
   
-    return () => socket.close();
-  }, [clients]);
-
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+    };
+  
+    socket.onclose = () => {
+      console.log("WebSocket closed");
+    };
+  
+    return () => {
+      socket.close();
+    };
+  }, []);
+  
+ 
 
 
   // Відкриття модального вікна
