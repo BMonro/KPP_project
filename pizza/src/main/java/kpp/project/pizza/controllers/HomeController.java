@@ -18,10 +18,12 @@ import java.lang.reflect.Type;
 @CrossOrigin(origins = "http://localhost:3000")
 public class HomeController {
     private final ObjectMapper objectMapper = new ObjectMapper();
+    private boolean isCreated = false;
 
     @PostMapping
     public Map<String, String> processRequest(@RequestBody Map<String, Object> requestData) {
         try {
+            if (!isCreated) {isCreated = true;
             Map<String, Object> data = (Map<String, Object>) requestData.get("data");
             Gson gson = new Gson();
 
@@ -36,10 +38,10 @@ public class HomeController {
             Pizzeria.getInstance().getMenu().setMenu(pizzas, drinks);
 
             if (data != null) {
-                String choosedCashRegisters = ((String) data.get("choosedCashRegisters")).replaceAll("\"","");
-                String choosedCooks = ((String) data.get("choosedCooks")).replaceAll("\"","");
-                String choosedKitchenMode = ((String) data.get("choosedKitchenMode")).replaceAll("\"","");
-                String strategyNumber = ((String) data.get("choosedStrategy")).replaceAll("\"","");
+                String choosedCashRegisters = ((String) data.get("choosedCashRegisters")).replaceAll("\"", "");
+                String choosedCooks = ((String) data.get("choosedCooks")).replaceAll("\"", "");
+                String choosedKitchenMode = ((String) data.get("choosedKitchenMode")).replaceAll("\"", "");
+                String strategyNumber = ((String) data.get("choosedStrategy")).replaceAll("\"", "");
 
                 Integer choosedCashRegistersInt = (choosedCashRegisters != null && !choosedCashRegisters.isEmpty())
                         ? Integer.parseInt(choosedCashRegisters) : null;
@@ -64,16 +66,18 @@ public class HomeController {
                     case "Strategy 3" -> new RandomStrategy();
                     default -> new StandartStrategy();
                 };
+                System.out.println(isCreated);
                 Simulation simulation = new Simulation(strategy);
                 simulation.start();
-//                Kitchen kitchen = Pizzeria.getInstance().getKitchen();
-//                if (!kitchen.isRunning()) {
-//                    kitchen.start();
-//                }
+                Kitchen kitchen = Pizzeria.getInstance().getKitchen();
+                if (!kitchen.isRunning()) {
+                    kitchen.start();
+                }
 
                 Map<String, String> response = new HashMap<>();
                 response.put("status", "OK");
                 return response;
+                }
             }
 
             Map<String, String> response = new HashMap<>();
