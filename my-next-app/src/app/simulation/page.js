@@ -7,18 +7,16 @@ import Cooker from "@/components/Cooker";
 import Cashier from "@/components/Cashier";
 import { sendDataToBackend } from "@/utils/sentData";
 import { fetchCustomers } from "@/utils/getData";
-
-
-
+import { fetchOrders } from "@/utils/getOrders";
 
 export default function Simulation() {
   const [CashRegisters, setCCashRegisters] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [orders, setOrders] = useState([
-    { id: 12, item: "Pizza Carbonara", status: "Готова" },
-    { id: 13, item: "Pizza Pepperoni", status: "Готується" },
-    { id: 14, item: "Pasta Bolognese", status: "Готова" },
-    { id: 15, item: "Salad Caesar", status: "Готується" }
+    // { id: 12, item: "Pizza Carbonara", status: "Готова" },
+    // { id: 13, item: "Pizza Pepperoni", status: "Готується" },
+    // { id: 14, item: "Pasta Bolognese", status: "Готова" },
+    // { id: 15, item: "Salad Caesar", status: "Готується" }
   ]);
   
   const [dataSent, setDataSent] = useState(false);
@@ -42,12 +40,16 @@ export default function Simulation() {
     const savedCooks = localStorage.getItem("choosedCooks");
     const savedCashRegisters = localStorage.getItem("choosedCashRegisters");
     const savedKitchenMode = localStorage.getItem("choosedKitchenMode");
-
     if (savedCooks) setCooks(JSON.parse(savedCooks));
     if (savedCashRegisters) setCashRegisters(JSON.parse(savedCashRegisters));
     if (savedKitchenMode) setKitchenMode(JSON.parse(savedKitchenMode));
   }, []);
 
+  useEffect(() => {
+    if (isModalOpen) {
+      fetchOrders(setOrders);
+    }
+  }, [isModalOpen]);
   
   // Стани для даних з localStorage
   const [clients, setClients] = useState([]); // Список клієнтів
@@ -315,9 +317,9 @@ export default function Simulation() {
             <h2>Список замовлень</h2>
             <div className="order-list">
               {orders.map((order) => (
-                <div key={order.id} className="order-item">
-                  <span className="order-id">№{order.id}</span>
-                  <span className="order-item-name">{order.item}</span>
+                <div key={order.orderId} className="order-item">
+                  <span className="order-id">№{order.orderId}</span>
+                  <span className="order-item-name">{order.nameOfPizza}</span>
                   <span className="order-status">{order.status}</span>
                 </div>
               ))}
