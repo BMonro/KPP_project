@@ -57,12 +57,14 @@ public class Simulation extends Thread{
             }
             order.setDrinks(drinks);
 
-            List<Cashier> cashiers = new ArrayList<>();
+            List<Cashier> cashiers = Pizzeria.getInstance().getCashiers();
             int cashierID = chooseCashier(cashiers);
 
             Customer customer = new Customer();
             customer.setIdCashier(String.valueOf(cashierID));
             customer.setOrder(order);
+            Pizzeria.getInstance().getCashiers().get(cashierID).addCustomer(customer);
+            sendCustomerData(customer);
         }, 0, deley, TimeUnit.SECONDS);
     }
 
@@ -97,39 +99,16 @@ public class Simulation extends Thread{
         return cashierList.get(minQueueIndex).getId();
     }
 
-    public static void sendCustomerData(IPizzaStatus status, String nameOfPizza, int orderId) {
+    public static void sendCustomerData(Customer customer) {
         try {
-            // Створюємо об'єкт DTO для передачі
-            PizzaDataDTO data = new PizzaDataDTO(status.toString(), nameOfPizza, orderId);
-
-            // Серіалізуємо об'єкт DTO в JSON
             Gson gson = new Gson();
-            String json = gson.toJson(data);
-
-            // Створюємо об'єкт HttpClient
-            HttpClient client = HttpClient.newHttpClient();
-
-            // Створюємо запит POST для відправки даних
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:3001/new/customer")) // Реальний URL
-                    .header("Content-Type", "application/json") // JSON-заголовок
-                    .POST(HttpRequest.BodyPublishers.ofString(json)) // Тіло запиту
-                    .build();
-
-            // Виконуємо запит
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            // Перевіряємо відповідь
-            if (response.statusCode() == 200) {
-                System.out.println("Pizza data successfully sent.");
-                System.out.println("Response Body: " + response.body());
-            } else {
-                System.out.println("Failed to send pizza data. Response code: " + response.statusCode());
-            }
-
+            String json = gson.toJson(customer);
+            WebSocketTextHandler.sendMessageToAll(json);
+            System.out.println("Sent customer data: " + json);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+
 
 }
