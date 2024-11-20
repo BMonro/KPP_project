@@ -13,5 +13,7 @@ public class WebSocketConfig implements WebSocketConfigurer {
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(new WebSocketTextHandler(), "/ws")
                 .setAllowedOrigins("*"); // Дозволяємо з'єднання з будь-якого джерела (для локальної розробки)
+        registry.addHandler(new WebSocketStateHandler(), "/new/state")
+                .setAllowedOrigins("*");
     }
 }
