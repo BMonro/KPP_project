@@ -1,7 +1,8 @@
 package kpp.project.pizza.models;
 
 import com.google.gson.Gson;
-import kpp.project.pizza.models.statuses.Ordered;
+import kpp.project.pizza.sockets.WebSocketStateHandler;
+import kpp.project.pizza.statuses.Ordered;
 
 import java.util.List;
 import java.util.Queue;

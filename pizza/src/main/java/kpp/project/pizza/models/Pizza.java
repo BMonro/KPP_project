@@ -1,15 +1,12 @@
 package kpp.project.pizza.models;
 
 
-import kpp.project.pizza.models.statuses.IPizzaStatus;
+import kpp.project.pizza.statuses.IPizzaStatus;
 
 import java.io.Serializable;
 import java.util.*;
 
-import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class Pizza implements Cloneable, Serializable {
     private int orderId;

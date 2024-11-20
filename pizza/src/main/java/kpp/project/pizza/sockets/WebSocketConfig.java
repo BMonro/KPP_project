@@ -1,4 +1,4 @@
-package kpp.project.pizza.models;
+package kpp.project.pizza.sockets;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;

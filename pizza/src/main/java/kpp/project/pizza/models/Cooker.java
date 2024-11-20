@@ -1,9 +1,7 @@
 package kpp.project.pizza.models;
 
-import com.google.gson.Gson;
+import kpp.project.pizza.sockets.WebSocketPauseHandler;
 
-import java.net.http.*;
-import java.net.URI;
 import java.util.List;
 import java.util.Random;
 
