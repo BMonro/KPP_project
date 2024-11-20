@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "concurrently \"npm run frontend\" \"npm run backend\"",
+    "frontend": "next dev",
+    "backend": "cd ../pizza && mvn spring-boot:run",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -14,6 +16,7 @@
     "react-dom": "^19.0.0-rc-02c0e824-20241028"
   },
   "devDependencies": {
+    "concurrently": "^9.1.0",
     "eslint": "^8",
     "eslint-config-next": "15.0.2",
     "postcss": "^8",

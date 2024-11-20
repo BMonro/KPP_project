@@ -21,11 +21,6 @@ export default function Simulation() {
 
   const [dataSent, setDataSent] = useState(false);
 
-  // Стани для даних з localStorage
-  // const [cooks, setCooks] = useState(1);
-  // const [kitchenMode, setKitchenMode] = useState("1 cook - 1 option");
-
-
   // Відправка даних на бекенд на початку запуску програми
   useEffect(() => {
     if (dataSent) return;
@@ -55,51 +50,16 @@ export default function Simulation() {
   // useCookerWebSocket();
   // Обробка WebSocket з бекенду для отримання даних
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080/ws");
+    const socket = new WebSocket("ws://localhost:8080/new/state");
   
     socket.onmessage = (event) => {
       try {
         const data = JSON.parse(event.data);
-        const { order: clientOrder, idCashier } = data;
+        // const { order: clientOrder, idCashier } = data;
         console.log("data");
         console.log(data);
 
-        const cashierID = idCashier || "1";
-        const casaElement = document.querySelector(".casa-image");
-        if (!casaElement) {
-          console.error("Casa element not found.");
-          return;
-        }
-        if (clients.length >= 27) {
-          console.log("Максимальна кількість клієнтів досягнута.");
-          return;
-        }
-        const casaRect = casaElement.getBoundingClientRect();
-        const casaX = casaRect.left;
-        const casaY = casaRect.top;
-        const casaWidth = casaRect.width;
-        const casaHeight = casaRect.height;
-    
-        const index = clients.length; 
-        const clientX = casaX + casaWidth * 0.1 + (index % 9) * casaWidth * 0.1;
-        const clientY = casaY + casaHeight * 0.4 + Math.floor(index / 9) * casaHeight * 0.1;
-
-        // Створення нового клієнта
-        const newClient = new Client(
-          document.getElementById("cooker-container"),
-          `Client ${clients.length + 1}`,
-          formatOrder(clientOrder), 
-          cashierID,
-          clientX, // координати для нового клієнта
-          clientY
-        );
         
-        // Оновлення стану клієнтів, додаючи нового клієнта в масив
-        setClients(prevClients => [...prevClients, newClient]);
-  
-        // Переміщення клієнта до касового апарату
-        moveToCashRegister(newClient, cashierID, setCashRegisters);
-  
       } catch (error) {
         console.error("Помилка обробки повідомлення:", error);
       }
