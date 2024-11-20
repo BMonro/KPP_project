@@ -9,22 +9,22 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/pizza-status")
+@RequestMapping("/orders")
 @CrossOrigin(origins = "http://localhost:3000")
 public class PizzaStatusController {
-    // sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName(),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
     @GetMapping
     public ResponseEntity<List<PizzaDataDTO>> getAllPizzaStatusRequest() {
-        /*Queue<Pizza> pizzas = Kitchen.getPizzas();
-        List<Pizza> pizzaList = pizzas.stream().toList();
-        List<PizzaDataDTO> items = pizzaList.stream()
-                .map(pizza -> new PizzaDataDTO(pizza.getState().getClass().getName(), pizza.getName(), pizza.getOrderId()))
-                .collect(Collectors.toList());*/
         List<Order> orders = Pizzeria.getInstance().getOrders();
         List<PizzaDataDTO> items = orders.stream()
                 .flatMap(order -> order.getPizzas().stream())
                 .map(pizza ->  new PizzaDataDTO(pizza.getState().getClass().getName(), pizza.getName(), pizza.getOrderId()))
                 .collect(Collectors.toList());
+        //List<PizzaDataDTO> items = new ArrayList<>();
+/*        items.add(new PizzaDataDTO("new", "pizza", 1));
+        items.add(new PizzaDataDTO("new", "pizza", 1));
+        items.add(new PizzaDataDTO("new", "pizza", 1));
+        items.add(new PizzaDataDTO("new", "pizza", 1));*/
+        System.out.println("Order to Front");
         return ResponseEntity.ok(items);
     }
 }
