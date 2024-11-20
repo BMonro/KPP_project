@@ -1,5 +1,6 @@
 package kpp.project.pizza.models;
 
+import com.google.gson.Gson;
 import kpp.project.pizza.models.statuses.Ordered;
 
 import java.util.List;
@@ -91,22 +92,22 @@ public class Kitchen  extends Thread{
                     try {
                         Thread.sleep(times[0] * 1000);
                         cooker.getPizza().nextStatus();
-                        ///simulation.sendCustomerData(cooker.getPizza().getState(), cooker.getPizza().getName(), cooker.getPizza().getOrderId());
+                        sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName(),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
                         System.out.println("Перший етап завершено!");
 
                         Thread.sleep(times[1] * 1000);
                         cooker.getPizza().nextStatus();
-                        ///simulation.sendCustomerData(cooker.getPizza().getState(), cooker.getPizza().getName(), cooker.getPizza().getOrderId());
+                        sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName(),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
                         System.out.println("Другий етап завершено!");
 
                         Thread.sleep(times[2] * 1000);
                         cooker.getPizza().nextStatus();
-                        //simulation.sendCustomerData(cooker.getPizza().getState(), cooker.getPizza().getName(), cooker.getPizza().getOrderId());
+                        sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName(),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
                         System.out.println("Третій етап завершено!");
 
                         Thread.sleep(times[3] * 1000);
                         cooker.getPizza().nextStatus();
-                        ///simulation.sendCustomerData(cooker.getPizza().getState(), cooker.getPizza().getName(), cooker.getPizza().getOrderId());
+                        sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName(),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
                         System.out.println("Процес завершено!");
 
                         synchronized (STATIC_VALUES.cookers) {
@@ -119,6 +120,18 @@ public class Kitchen  extends Thread{
 
                 t.start();
             }
+        }
+    }
+
+
+    public static void sendpizzaDtoData(PizzaDataDTO pizzaDataDTO) {
+        try {
+            Gson gson = new Gson();
+            String json = gson.toJson(pizzaDataDTO);
+            WebSocketStateHandler.sendMessageToAll(json);
+            System.out.println("Sent pizza data: " + json);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
