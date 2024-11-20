@@ -34,6 +34,7 @@ public class HomeController {
             // Парсинг JSON у список об'єктів Drink
             List<Drink> drinks = gson.fromJson((String)data.get("Drinks"), listType1);
             List<Pizza> pizzas = gson.fromJson((String)data.get("Pizzas"), listType2);
+
             System.out.println(data.get("Pizzas"));
             Pizzeria.getInstance().getMenu().setMenu(pizzas, drinks);
 
@@ -50,9 +51,9 @@ public class HomeController {
 
                 Integer intKitchenMode = 0;
                 if (choosedKitchenMode.equals("1 cook - 1 pizza")) {
-                    intKitchenMode = 1;
-                } else if (choosedKitchenMode.equals("1 cook - 1 option")) {
                     intKitchenMode = 2;
+                } else if (choosedKitchenMode.equals("1 cook - 1 option")) {
+                    intKitchenMode = 1;
                 }
 
                 System.out.println("Int mode " + intKitchenMode);
@@ -66,7 +67,6 @@ public class HomeController {
                     case "Strategy 3" -> new RandomStrategy();
                     default -> new StandartStrategy();
                 };
-                System.out.println(isCreated);
                 Simulation simulation = new Simulation(strategy);
                 simulation.start();
                 Kitchen kitchen = Pizzeria.getInstance().getKitchen();

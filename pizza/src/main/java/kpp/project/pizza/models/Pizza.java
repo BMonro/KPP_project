@@ -1,6 +1,7 @@
 package kpp.project.pizza.models;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import kpp.project.pizza.statuses.IPizzaStatus;
 
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.util.*;
 
 import java.util.List;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Pizza implements Cloneable, Serializable {
     private int orderId;
     // Поле для зберігання назви

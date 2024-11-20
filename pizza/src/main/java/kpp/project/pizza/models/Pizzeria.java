@@ -45,6 +45,7 @@ public class Pizzeria {
             cookers.add(cooc);
         }
         kitchen.setEmployees(cookers);
+        STATIC_VALUES.cookers = cookers;
     }
 
     // Геттер для cashiers
@@ -59,7 +60,7 @@ public class Pizzeria {
             Cashier cashier = new Cashier(i);
             cashiers.add(cashier);
         }
-        this.cashiers = cashiers;
+        instance.cashiers = cashiers;
     }
 
     // Геттер для orders

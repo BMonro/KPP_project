@@ -17,7 +17,7 @@ public class Logger implements Observer {
 
         // Лог для запису
         String logEntry = "Pizza " + pizza.getName() +
-                " (Order ID: " + pizza.getOrderId() + ") is now " + pizza.getState().toString();
+                " (Order ID: " + pizza.getOrderId() + ") is now " + pizza.getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.","") ;
 
         // Записуємо лог у файл
         writeLogToFile(fileName, logEntry);
