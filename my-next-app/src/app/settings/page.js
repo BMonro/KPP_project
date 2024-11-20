@@ -85,6 +85,7 @@ export default function Settings() {
     }, []);
 
     useEffect(() => {
+        console.log(JSON.stringify(currentPizzas))
         localStorage.setItem('Pizzas', JSON.stringify(currentPizzas));
     }, [currentPizzas]);
 

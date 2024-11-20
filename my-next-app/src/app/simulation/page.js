@@ -3,11 +3,30 @@
 import { useEffect, useState } from "react";
 import Header from "@/components/SimulationHeader";
 import Client from "@/components/Client";
-import Cooker from "@/components/Cooker";
-import Cashier from "@/components/Cashier";
+
 import { sendDataToBackend } from "@/utils/sentData";
 import { moveToCookingStation } from "@/components/movingFunctions";
 import { moveToCashRegister } from "@/components/movingFunctions";
+
+const getLocalStorageData = () => {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const value = localStorage.getItem(key);
+    data[key] = value;
+  }
+  return data;
+};
+
+// Форматування замовлення для клієнта
+const formatOrder = (clientOrder) => {
+  return `
+    ID: ${clientOrder.orderID}
+    Pizzas: ${clientOrder.pizzas.map((pizza) => `"${pizza.name}"`).join(", ")}
+    Drinks: ${clientOrder.drinks.map((drink) => `"${drink.name}"`).join(", ")}
+  `.trim();
+};
+
 
 export default function Simulation() {
   // Стани для клієнтів та інших елементів
@@ -18,8 +37,32 @@ export default function Simulation() {
   const [dataSent, setDataSent] = useState(false);
 
   // Стани для даних з localStorage
-  const [cooks, setCooks] = useState(1);
-  const [kitchenMode, setKitchenMode] = useState("1 cook - 1 option");
+  // const [cooks, setCooks] = useState(1);
+  // const [kitchenMode, setKitchenMode] = useState("1 cook - 1 option");
+
+
+  // Відправка даних на бекенд на початку запуску програми
+  useEffect(() => {
+    if (dataSent) return;
+
+    const data = getLocalStorageData();
+    sendDataToBackend(data);
+    setDataSent(true);
+  }, [dataSent]);
+
+  
+  // Ініціалізація кухарів і станцій та касирів
+  useEffect(() => {
+    const container = document.getElementById("cooker-container");
+    const casaElement = document.querySelector(".casa-image");
+    const tableElement = document.querySelector(".table-image");
+
+    if (container && casaElement && tableElement) {
+      casaElement.onload = () => initializeCashRegisters(casaElement, setCashRegisters);
+      tableElement.onload = () => initializeCookersAndStations(tableElement, container);
+      casaElement.onload = () => initializeCashiers(casaElement, container, setCashRegisters);
+    }
+  }, []);
 
   // Обробка WebSocket з бекенду для отримання даних
   useEffect(() => {
@@ -75,125 +118,6 @@ export default function Simulation() {
   
     return () => socket.close();
   }, [clients]);
-
-  // Форматування замовлення для клієнта
-  const formatOrder = (clientOrder) => {
-    return `
-      ID: ${clientOrder.orderID}
-      Pizzas: ${clientOrder.pizzas.map((pizza) => `"${pizza.name}"`).join(", ")}
-      Drinks: ${clientOrder.drinks.map((drink) => `"${drink.name}"`).join(", ")}
-    `.trim();
-  };
-
-  // Відправка даних на бекенд
-  useEffect(() => {
-    if (dataSent) return;
-
-    const data = getLocalStorageData();
-    sendDataToBackend(data);
-    setDataSent(true);
-  }, [dataSent]);
-
-  const getLocalStorageData = () => {
-    const data = {};
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      const value = localStorage.getItem(key);
-      data[key] = value;
-    }
-    return data;
-  };
-
-
-  // Зчитування даних з localStorage
-  useEffect(() => {
-    const savedCooks = localStorage.getItem("choosedCooks");
-    const savedCashRegisters = localStorage.getItem("choosedCashRegisters");
-    const savedKitchenMode = localStorage.getItem("choosedKitchenMode");
-
-    if (savedCooks) setCooks(JSON.parse(savedCooks));
-    if (savedCashRegisters) setCashRegisters(JSON.parse(savedCashRegisters));
-    if (savedKitchenMode) setKitchenMode(JSON.parse(savedKitchenMode));
-  }, []);
-
-  // Ініціалізація касових реєстрів і кухарів
-  useEffect(() => {
-    const casaElement = document.querySelector(".casa-image");
-
-    if (casaElement && casaElement.complete) {
-      initializeCashRegisters(casaElement);
-    } else {
-      casaElement.onload = () => initializeCashRegisters(casaElement);
-    }
-
-    // Функція для ініціалізації касових реєстрів
-    function initializeCashRegisters(casaElement) {
-      const casaRect = casaElement.getBoundingClientRect();
-      const { left: casaX, top: casaY, width: casaWidth, height: casaHeight } = casaRect;
-
-      const newRegisters = Array.from({ length: 3 }, (_, i) => ({
-        name: `Cash Register ${i + 1}`,
-        x: casaX + casaWidth * 0.25 + i * casaWidth * 0.25,
-        y: casaY - casaHeight * 0.4,
-        isFree: true,
-      }));
-
-      setCashRegisters(newRegisters);
-    }
-  }, []);
-
-  // Ініціалізація кухарів і станцій
-  useEffect(() => {
-    const container = document.getElementById("cooker-container");
-    const casaElement = document.querySelector(".casa-image");
-    const tableElement = document.querySelector(".table-image");
-
-    if (container && casaElement && tableElement) {
-      tableElement.onload = () => initializeCookersAndStations(tableElement, container);
-      casaElement.onload = () => initializeCashiers(casaElement, container);
-    }
-  }, [cooks, kitchenMode]);
-
-  // Ініціалізація кухарів та станцій
-  const initializeCookersAndStations = (tableElement, container) => {
-    const tableRect = tableElement.getBoundingClientRect();
-    const { left: tableX, top: tableY, width: tableWidth, height: tableHeight } = tableRect;
-    const sliceTable = tableWidth / 4;
-
-    const Stages = [
-      { name: "DoughStation", x: tableX + tableWidth * 0.1, y: tableY + tableHeight * 0.05, isFree: true },
-      { name: "CookingStation", x: tableX + sliceTable, y: tableY + tableHeight * 0.05, isFree: true },
-      { name: "BakingStation", x: tableX + sliceTable * 2, y: tableY + tableHeight * 0.05, isFree: true },
-      { name: "SlicingStation", x: tableX + sliceTable * 3, y: tableY + tableHeight / 3, isFree: true },
-    ];
-
-    const cookers = Array.from({ length: 3 }, (_, i) => {
-      const cookerX = tableX + i * tableWidth * 0.09;
-      const cookerY = tableY + tableHeight * 0.3;
-      return new Cooker(container, `Chef ${i + 1}`, cookerX, cookerY);
-    });
-
-    // Анімація для кухарів
-    if (cookers.length > 0) {
-      setTimeout(() => moveToCookingStation(cookers[1], "SlicingStation", Stages), 1000);
-      setTimeout(() => moveToCookingStation(cookers[1], "BakingStation", Stages), 4000);
-    }
-  };
-
-  // Ініціалізація касирів
-  const initializeCashiers = (casaElement, container) => {
-    const casaRect = casaElement.getBoundingClientRect();
-    const { left: casaX, top: casaY, width: casaWidth, height: casaHeight } = casaRect;
-
-    const cashiers = Array.from({ length: 3 }, (_, i) => {
-      const cashierX = casaX + casaWidth * 0.25 + i * casaWidth * 0.25;
-      const cashierY = casaY - casaHeight * 0.4;
-      return new Cashier(container, `Cashier ${i + 1}`, cashierX, cashierY);
-    });
-
-    // Оновлення стейту касирів
-    setCashRegisters(cashiers);
-  };
 
   // Відкриття модального вікна
   const handleTableClick = () => setIsModalOpen(true);
