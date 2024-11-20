@@ -41,8 +41,9 @@ public class Kitchen  extends Thread{
                         for(int i=1;i<employees.size();i++){
                             Pizza pizza1 = employees.get(i-1).getPizza();
                             double time = pizza1.getCookingTime()/4.0;
+                            cooker.checkAndPauseIfNeeded();
                             pizza1.nextStatus();
-                            //simulation.sendCustomerData(pizza1.getState(), pizza1.getName(), pizza1.getOrderId());
+                            sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName(),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
                             Cooker cooker1 = employees.get(i);
                             Thread.sleep((int)(time*1000));
                             employees.get(i-1).setPizza(null);
@@ -91,21 +92,25 @@ public class Kitchen  extends Thread{
                 Thread t = new Thread(() -> {
                     try {
                         Thread.sleep(times[0] * 1000);
+                        cooker.checkAndPauseIfNeeded();
                         cooker.getPizza().nextStatus();
                         sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName(),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
                         System.out.println("Перший етап завершено!");
 
                         Thread.sleep(times[1] * 1000);
+                        cooker.checkAndPauseIfNeeded();
                         cooker.getPizza().nextStatus();
                         sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName(),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
                         System.out.println("Другий етап завершено!");
 
                         Thread.sleep(times[2] * 1000);
+                        cooker.checkAndPauseIfNeeded();
                         cooker.getPizza().nextStatus();
                         sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName(),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
                         System.out.println("Третій етап завершено!");
 
                         Thread.sleep(times[3] * 1000);
+                        cooker.checkAndPauseIfNeeded();
                         cooker.getPizza().nextStatus();
                         sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName(),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
                         System.out.println("Процес завершено!");
