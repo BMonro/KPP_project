@@ -10,25 +10,7 @@ import { moveToCashRegister } from "@/components/movingFunctions";
 import { initializeCookersAndStations } from "@/components/cookersWork";
 import { initializeCashRegisters } from "@/components/CashRegisters";
 import { initializeCashiers } from "@/components/cashiersWork";
-
-const getLocalStorageData = () => {
-  const data = {};
-  for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(i);
-    const value = localStorage.getItem(key);
-    data[key] = value;
-  }
-  return data;
-};
-
-// Форматування замовлення для клієнта
-const formatOrder = (clientOrder) => {
-  return `
-    ID: ${clientOrder.orderID}
-    Pizzas: ${clientOrder.pizzas.map((pizza) => `"${pizza.name}"`).join(", ")}
-    Drinks: ${clientOrder.drinks.map((drink) => `"${drink.name}"`).join(", ")}
-  `.trim();
-};
+import useClientWebSocket from "@/hooks/useClientWebSocket";
 
 
 export default function Simulation() {
@@ -68,6 +50,9 @@ export default function Simulation() {
     }
   }, []);
 
+
+  useClientWebSocket(clients, setClients, setCashRegisters);
+  // useCookerWebSocket();
   // Обробка WebSocket з бекенду для отримання даних
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:8080/ws");
@@ -123,6 +108,8 @@ export default function Simulation() {
     return () => socket.close();
   }, [clients]);
 
+
+
   // Відкриття модального вікна
   const handleTableClick = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -161,3 +148,22 @@ export default function Simulation() {
     </div>
   );
 }
+
+const getLocalStorageData = () => {
+  const data = {};
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    const value = localStorage.getItem(key);
+    data[key] = value;
+  }
+  return data;
+};
+
+// Форматування замовлення для клієнта
+const formatOrder = (clientOrder) => {
+  return `
+    ID: ${clientOrder.orderID}
+    Pizzas: ${clientOrder.pizzas.map((pizza) => `"${pizza.name}"`).join(", ")}
+    Drinks: ${clientOrder.drinks.map((drink) => `"${drink.name}"`).join(", ")}
+  `.trim();
+};
