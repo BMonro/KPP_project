@@ -7,6 +7,9 @@ import Client from "@/components/Client";
 import { sendDataToBackend } from "@/utils/sentData";
 import { moveToCookingStation } from "@/components/movingFunctions";
 import { moveToCashRegister } from "@/components/movingFunctions";
+import { initializeCookersAndStations } from "@/components/cookersWork";
+import { initializeCashRegisters } from "@/components/CashRegisters";
+import { initializeCashiers } from "@/components/cashiersWork";
 
 const getLocalStorageData = () => {
   const data = {};
@@ -58,6 +61,7 @@ export default function Simulation() {
     const tableElement = document.querySelector(".table-image");
 
     if (container && casaElement && tableElement) {
+      console.log("initial")
       casaElement.onload = () => initializeCashRegisters(casaElement, setCashRegisters);
       tableElement.onload = () => initializeCookersAndStations(tableElement, container);
       casaElement.onload = () => initializeCashiers(casaElement, container, setCashRegisters);

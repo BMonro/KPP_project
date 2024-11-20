@@ -1,7 +1,7 @@
 import { moveToCookingStation } from "@/components/movingFunctions";
 import Cooker from "@/components/Cooker";
 
-const initializeCookersAndStations = (tableElement, container) => {
+export const initializeCookersAndStations = (tableElement, container) => {
     const tableRect = tableElement.getBoundingClientRect();
     const { left: tableX, top: tableY, width: tableWidth, height: tableHeight } = tableRect;
     const sliceTable = tableWidth / 4;
