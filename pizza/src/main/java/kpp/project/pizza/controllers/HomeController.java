@@ -66,8 +66,11 @@ public class HomeController {
                 };
                 Simulation simulation = new Simulation(strategy);
                 simulation.start();
-//                Kitchen kitchen = Pizzeria.getInstance().getKitchen();
-//                kitchen.start();
+                Kitchen kitchen = Pizzeria.getInstance().getKitchen();
+                if (!kitchen.isRunning()) {
+                    kitchen.start();
+                }
+
                 Map<String, String> response = new HashMap<>();
                 response.put("status", "OK");
                 return response;
