@@ -1,9 +1,15 @@
 package kpp.project.pizza.models;
 
 import com.google.gson.Gson;
+import kpp.project.pizza.models.statuses.IPizzaStatus;
 import kpp.project.pizza.models.strategies.IPizzaStrategy;
+import org.apache.el.stream.Stream;
 
-import javax.websocket.Session;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,10 +31,9 @@ public class Simulation extends Thread{
     }
 
     public void generateCustomers() {
-        System.out.println("Simulation started");
         int deley = strategy.generateDelays();
         scheduler.scheduleAtFixedRate(() -> {
-            System.out.println("Generating customer");
+
             Order order = new Order();
             List<Pizza> pizzas = new ArrayList<>();
             List<Pizza> allPizzas = Pizzeria.getInstance().getMenu().getPizzas();
@@ -42,7 +47,7 @@ public class Simulation extends Thread{
                 }
             }
             order.setPizzas(pizzas);
-            System.out.println(order.getPizzas());
+
             int drinksCount = generateCount();
             for (int i = 0; i < drinksCount; i++) {
                 Drink drink = generateOrdersPart(allDrinks);
@@ -51,17 +56,13 @@ public class Simulation extends Thread{
                 }
             }
             order.setDrinks(drinks);
-            System.out.println(order.getDrinks());
-            List<Cashier> cashiers = Pizzeria.getInstance().getCashiers();
+
+            List<Cashier> cashiers = new ArrayList<>();
             int cashierID = chooseCashier(cashiers);
-            System.out.println("Cashier ID: " + cashierID);
+
             Customer customer = new Customer();
             customer.setIdCashier(String.valueOf(cashierID));
             customer.setOrder(order);
-            System.out.println(customer);
-            //Pizzeria.getInstance().getCashiers().get(cashierID).addCustomer(customer);
-            System.out.println(customer);
-            sendCustomerData(customer);
         }, 0, deley, TimeUnit.SECONDS);
     }
 
@@ -85,6 +86,7 @@ public class Simulation extends Thread{
         int cashierCount = cashierList.size();
         int minQueueIndex = 0;
         int minQueueSize = Integer.MAX_VALUE;
+
         for (int i = 0; i < cashierCount; i++) {
             int currentQueueSize = cashierList.get(i).getCustomersQueue();
             if (currentQueueSize < minQueueSize) {
@@ -95,17 +97,39 @@ public class Simulation extends Thread{
         return cashierList.get(minQueueIndex).getId();
     }
 
-    public static void sendCustomerData(Customer customer) {
+    public static void sendCustomerData(IPizzaStatus status, String nameOfPizza, int orderId) {
         try {
+            // Створюємо об'єкт DTO для передачі
+            PizzaDataDTO data = new PizzaDataDTO(status.toString(), nameOfPizza, orderId);
+
+            // Серіалізуємо об'єкт DTO в JSON
             Gson gson = new Gson();
-            String json = gson.toJson(customer);
-            WebSocketTextHandler.sendMessageToAll(json);
-            System.out.println("Sent customer data: " + json);
+            String json = gson.toJson(data);
+
+            // Створюємо об'єкт HttpClient
+            HttpClient client = HttpClient.newHttpClient();
+
+            // Створюємо запит POST для відправки даних
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:3001/new/customer")) // Реальний URL
+                    .header("Content-Type", "application/json") // JSON-заголовок
+                    .POST(HttpRequest.BodyPublishers.ofString(json)) // Тіло запиту
+                    .build();
+
+            // Виконуємо запит
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            // Перевіряємо відповідь
+            if (response.statusCode() == 200) {
+                System.out.println("Pizza data successfully sent.");
+                System.out.println("Response Body: " + response.body());
+            } else {
+                System.out.println("Failed to send pizza data. Response code: " + response.statusCode());
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 
 }

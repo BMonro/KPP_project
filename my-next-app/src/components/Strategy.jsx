@@ -5,7 +5,7 @@ import strategy1Img from "/public/strategy1.svg"
 import strategy2Img from "/public/strategy2.svg"
 import strategy3Img from "/public/strategy3.svg"
 import { GeneralItem } from "./General";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Strategy() {
     const [currentStrategy, setCurrentStrategy] = useState('Strategy 1');  // за замовчуванням 1
@@ -22,10 +22,21 @@ export default function Strategy() {
         },
         {
             title: "Strategy 3",
-            text: "Steadily growing number of customers",
+            text: "Different number of customers for each hour throughout the day",
             img: strategy3Img,
         },
     ];
+
+    useEffect(() => {
+        const savedStrategy = localStorage.getItem('choosedStrategy');
+        console.log(savedStrategy)
+
+
+        if (savedStrategy) setCurrentStrategy(JSON.parse(savedStrategy));
+
+    }, []);
+
+
 
     const generalItem =
     {
@@ -41,11 +52,12 @@ export default function Strategy() {
         });
 
         localStorage.setItem('choosedStrategy', JSON.stringify(currentStrategy));
+        alert('You have successfully saved your data!');
     }
 
     return (
         <section className="pb-8 pt-8 px-20 flex flex-col">
-            <div className=" flex justify-between gap-10 mb-6">
+            <div className=" flex justify-between gap-10 mb-0 transform scale-[0.95]">
                 {items.map((item, index) => (
                     <Item key={index} title={item.title} text={item.text} img={item.img} />
                 ))}
@@ -59,10 +71,10 @@ export default function Strategy() {
 
 function Item({ title, text, img }) {
     return (
-        <div className=" w-1/3 relative flex flex-col text-center bg-[#F1DACE] items-center  border-[#708360] rounded-[21px] border-[4px]">
+        <div className="  w-1/3 relative flex flex-col text-center bg-[#F1DACE] items-center  border-[#708360] rounded-[21px] border-[4px] ">
             <p className=" w-full p-3 text-4xl  text-black bg-[#708360] rounded-[10px] ">{title}</p>
-            <p className=" p-3 text-[28px] leading-8  text-[#5E5E5E] mb-3 flex-grow">{text}</p>
-            <Image className="mb-4 " src={img} alt="img" />
+            <p className=" p-2 text-[28px] leading-8  text-[#5E5E5E] mb-3 flex-grow">{text}</p>
+            <Image className="mb-4  transform scale-[0.9]" src={img} alt="img" />
         </div>
     );
 }

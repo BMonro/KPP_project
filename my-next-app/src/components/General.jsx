@@ -2,11 +2,24 @@ import { useState } from "react";
 import CustomButton from "./CustomButton";
 import arrow from "/public/arrow.svg"
 import Image from "next/image";
-
+import { useEffect } from "react";
 export default function General() {
     const [currentCooks, setCurrentCooks] = useState(1);  // за замовчуванням 1
     const [currentRegisters, setCurrentRegisters] = useState(1);  // за замовчуванням 1
     const [currentMode, setCurrentMode] = useState("1 cook - 1 option");  // за замовчуванням перший режим
+
+    useEffect(() => {
+        const savedStrategy = localStorage.getItem('choosedCooks');
+        const choosedCashRegisters = localStorage.getItem('choosedCashRegisters');
+        const choosedKitchenMode = localStorage.getItem('choosedKitchenMode');
+
+
+
+        if (savedStrategy) setCurrentCooks(JSON.parse(savedStrategy));
+        if (choosedCashRegisters) setCurrentRegisters(JSON.parse(choosedCashRegisters));
+        if (choosedKitchenMode) setCurrentMode(JSON.parse(choosedKitchenMode));
+    }, []);
+
 
     const items = [
         {
@@ -39,6 +52,7 @@ export default function General() {
         localStorage.setItem('choosedCooks', JSON.stringify(currentCooks));
         localStorage.setItem('choosedCashRegisters', JSON.stringify(currentRegisters));
         localStorage.setItem('choosedKitchenMode', JSON.stringify(currentMode));
+        alert('You have successfully saved your data!');
     }
 
     return (
