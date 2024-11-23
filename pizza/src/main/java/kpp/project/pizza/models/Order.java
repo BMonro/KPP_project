@@ -22,7 +22,7 @@ public class Order {
     private List<Drink> drinks;
 
     // Поле для зберігання статусу замовлення
-    private String status;
+    private String status ;
 
     // Гетери та сетери
     public int getOrderID() {

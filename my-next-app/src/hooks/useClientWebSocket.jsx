@@ -86,4 +86,3 @@ const calculateClientPosition = (casaRect, index) => {
 };
 
 export default useClientWebSocket;
-

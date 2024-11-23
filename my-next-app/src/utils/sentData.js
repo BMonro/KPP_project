@@ -36,4 +36,4 @@ export const sendDataToKitchen = async (data) => {
     } catch (error) {
         console.error('Error:', error);
     }
-};
+}; 
