@@ -50,7 +50,7 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
                 );
 
                 setClients((prevClients) => [...prevClients, newClient]);
-                // sendDataToKitchen(JSON.stringify(clientOrder));
+                sendDataToKitchen(clientOrder);
                 moveToCashRegister(newClient, cashierID, setCashRegisters);
             } catch (error) {
                 console.error("Помилка обробки повідомлення:", error);

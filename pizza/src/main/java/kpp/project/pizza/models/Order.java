@@ -1,17 +1,24 @@
 package kpp.project.pizza.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class Order {
     private static int numberOfOrders = 0;
     // Поле для зберігання ідентифікатора замовлення
+    @JsonProperty("orderID")
     private int orderID;
 
+
     // Поле для зберігання списку піц у замовленні
+    @JsonProperty("pizzas")
     private List<Pizza> pizzas;
 
     // Поле для зберігання списку напоїв у замовленні
+    @JsonProperty("drinks")
     private List<Drink> drinks;
 
     // Поле для зберігання статусу замовлення
@@ -41,6 +48,7 @@ public class Order {
         this.drinks = drinks;
     }
 
+
     public String getStatus() {
         return status;
     }
@@ -65,6 +73,10 @@ public class Order {
                 .collect(Collectors.joining(", ")) : "[]") +
                 ", status='" + status + '\'' +
                 '}';
+    }
+
+    public void setOrderID(int orderID) {
+        this.orderID = orderID;
     }
 }
 

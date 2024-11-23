@@ -26,7 +26,7 @@ export const sendDataToKitchen = async (data) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ data: data }),
+                body: JSON.stringify({ order: data }),
             });
             const responseData = await response.json();
             console.log('Success:', responseData);
