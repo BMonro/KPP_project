@@ -14,11 +14,13 @@ import useClientWebSocket from "@/hooks/useClientWebSocket";
 
 
 export default function Simulation() {
+
   // Стани для клієнтів та інших елементів
   const [clients, setClients] = useState([]);
   const [cashRegisters, setCashRegisters] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [cookers, setCookers] = useState([]);
+  const [stages, setStages] = useState([]);
   const hasSentData = useRef(false); 
   const hasInitPlace = useRef(false); 
   useEffect(() => {
@@ -42,12 +44,20 @@ export default function Simulation() {
     if (container && casaElement && tableElement) {
       console.log("initial")
       casaElement.onload = () => initializeCashRegisters(casaElement, setCashRegisters);
-      tableElement.onload = () => initializeCookersAndStations(tableElement, container);
+      tableElement.onload = () => initializeCookersAndStations(tableElement, container, setCookers, setStages);
       casaElement.onload = () => initializeCashiers(casaElement, container, setCashRegisters);
       hasInitPlace.current = true;
+      
+
     }
     
   }, []);
+
+  function testF() {
+      moveToCookingStation(cookers[0], stages[1].name, stages);
+  moveToCookingStation(cookers[1], stages[3].name,stages);
+  moveToCookingStation(cookers[2], stages[2].name,stages);
+  }
 
 
   useClientWebSocket(clients, setClients, setCashRegisters);
@@ -84,7 +94,9 @@ export default function Simulation() {
   // }, []);
   
  
+  console.log(cookers, stages)
 
+  
 
   // Відкриття модального вікна
   const handleTableClick = () => setIsModalOpen(true);
@@ -92,6 +104,9 @@ export default function Simulation() {
 
   return (
     <div className="h-screen overflow-hidden">
+    <button onClick={testF} >
+            test button
+            </button>
       <Header />
       <div className="h-full overflow-x-scroll">
         <div className="simulation-background" id="cooker-container">
