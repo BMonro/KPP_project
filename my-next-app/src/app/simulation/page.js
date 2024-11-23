@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Header from "@/components/SimulationHeader";
 import Client from "@/components/Client";
 
@@ -19,21 +19,22 @@ export default function Simulation() {
   const [cashRegisters, setCashRegisters] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const [dataSent, setDataSent] = useState(false);
-
-  // Відправка даних на бекенд на початку запуску програми
+  const hasSentData = useRef(false); 
+  const hasInitPlace = useRef(false); 
   useEffect(() => {
-    if (dataSent) return;
+      if (hasSentData.current) return;
 
-    const data = getLocalStorageData();
-    console.log(data)
-    sendDataToBackend(data);
-    setDataSent(true);
-  }, [dataSent]);
+      const data = getLocalStorageData();
+      console.log(data);
+      sendDataToBackend(data);
+
+      hasSentData.current = true;
+  }, []);
 
   
   // Ініціалізація кухарів і станцій та касирів
   useEffect(() => {
+    if (hasInitPlace.current) return;
     const container = document.getElementById("cooker-container");
     const casaElement = document.querySelector(".casa-image");
     const tableElement = document.querySelector(".table-image");
@@ -43,42 +44,44 @@ export default function Simulation() {
       casaElement.onload = () => initializeCashRegisters(casaElement, setCashRegisters);
       tableElement.onload = () => initializeCookersAndStations(tableElement, container);
       casaElement.onload = () => initializeCashiers(casaElement, container, setCashRegisters);
+      hasInitPlace.current = true;
     }
+    
   }, []);
 
 
   useClientWebSocket(clients, setClients, setCashRegisters);
   // useCookerWebSocket();
   // Обробка WebSocket з бекенду для отримання даних
-  useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080/new/state");
+  // useEffect(() => {
+  //   const socket = new WebSocket("ws://localhost:8080/new/state");
   
-    socket.onopen = () => {
-      console.log("WebSocket connected");
-    };
+  //   socket.onopen = () => {
+  //     console.log("WebSocket connected");
+  //   };
   
-    socket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        console.log("Received data:", data);
+  //   socket.onmessage = (event) => {
+  //     try {
+  //       const data = JSON.parse(event.data);
+  //       console.log("Received data:", data);
 
-      } catch (error) {
-        console.error("Error processing message:", error);
-      }
-    };
+  //     } catch (error) {
+  //       console.error("Error processing message:", error);
+  //     }
+  //   };
   
-    socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-    };
+  //   socket.onerror = (error) => {
+  //     console.error("WebSocket error:", error);
+  //   };
   
-    socket.onclose = () => {
-      console.log("WebSocket closed");
-    };
+  //   socket.onclose = () => {
+  //     console.log("WebSocket closed");
+  //   };
   
-    return () => {
-      socket.close();
-    };
-  }, []);
+  //   return () => {
+  //     socket.close();
+  //   };
+  // }, []);
   
  
 
