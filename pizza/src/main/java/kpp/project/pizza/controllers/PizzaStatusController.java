@@ -20,7 +20,7 @@ public class PizzaStatusController {
                 .map(pizza ->  new PizzaDataDTO(pizza.getState().getClass().getName(), pizza.getName(), pizza.getOrderId()))
                 .collect(Collectors.toList());
         //List<PizzaDataDTO> items = new ArrayList<>();
-/*        items.add(new PizzaDataDTO("new", "pizza", 1));
+        /*items.add(new PizzaDataDTO("new", "pizza", 1));
         items.add(new PizzaDataDTO("new", "pizza", 1));
         items.add(new PizzaDataDTO("new", "pizza", 1));
         items.add(new PizzaDataDTO("new", "pizza", 1));*/

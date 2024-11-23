@@ -29,12 +29,15 @@ public class HomeController {
 
             // Оголошуємо тип для списку Drink
             Type listType1 = new TypeToken<List<Drink>>() {}.getType();
+            //System.out.println("Parsed Drinks: " + listType1);
             Type listType2 = new TypeToken<List<Pizza>>() {}.getType();
+            //System.out.println("Parsed Pizzas: " + listType1);
 
             // Парсинг JSON у список об'єктів Drink
             List<Drink> drinks = gson.fromJson((String)data.get("Drinks"), listType1);
             List<Pizza> pizzas = gson.fromJson((String)data.get("Pizzas"), listType2);
 
+            System.out.println(data.get("Drinks"));
             System.out.println(data.get("Pizzas"));
             Pizzeria.getInstance().getMenu().setMenu(pizzas, drinks);
 
@@ -42,7 +45,7 @@ public class HomeController {
                 String choosedCashRegisters = ((String) data.get("choosedCashRegisters")).replaceAll("\"", "");
                 String choosedCooks = ((String) data.get("choosedCooks")).replaceAll("\"", "");
                 String choosedKitchenMode = ((String) data.get("choosedKitchenMode")).replaceAll("\"", "");
-                String strategyNumber = ((String) data.get("choosedStrategy")).replaceAll("\"", "");
+                String strategyNumber = ((String) data.get("choosedKitchenMode")).replaceAll("\"", "");
 
                 Integer choosedCashRegistersInt = (choosedCashRegisters != null && !choosedCashRegisters.isEmpty())
                         ? Integer.parseInt(choosedCashRegisters) : null;
