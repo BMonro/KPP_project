@@ -1,5 +1,15 @@
 import { moveToCashRegister } from "@/components/movingFunctions";
 import { useEffect } from "react";
+import Client from "@/components/Client";
+import { sendDataToKitchen } from "@/utils/sentData";
+// Форматування замовлення для клієнта
+const formatOrder = (clientOrder) => {
+    return `
+      ID: ${clientOrder.orderID}
+      Pizzas: ${clientOrder.pizzas.map((pizza) => `"${pizza.name}"`).join(", ")}
+      Drinks: ${clientOrder.drinks.map((drink) => `"${drink.name}"`).join(", ")}
+    `.trim();
+};
 
 const useClientWebSocket = (clients, setClients, setCashRegisters) => {
     useEffect(() => {
@@ -13,7 +23,8 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
             try {
                 const data = JSON.parse(event.data);
                 const { order: clientOrder, idCashier } = data;
-                console.log("Received data:", data);
+                console.log("Received data:", clientOrder);
+                console.log(JSON.stringify(clientOrder));
 
                 const cashierID = idCashier || "1";
                 const casaElement = document.querySelector(".casa-image");
@@ -39,7 +50,7 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
                 );
 
                 setClients((prevClients) => [...prevClients, newClient]);
-                sendDataToKitchen(JSON.stringify(clientOrder));
+                // sendDataToKitchen(JSON.stringify(clientOrder));
                 moveToCashRegister(newClient, cashierID, setCashRegisters);
             } catch (error) {
                 console.error("Помилка обробки повідомлення:", error);
@@ -59,7 +70,7 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
         };
 
         return () => socket.close();
-    }, []); // Порожній масив залежностей для стабільності
+    }, [clients]); // Порожній масив залежностей для стабільності
 };
 
 const calculateClientPosition = (casaRect, index) => {
@@ -75,3 +86,4 @@ const calculateClientPosition = (casaRect, index) => {
 };
 
 export default useClientWebSocket;
+

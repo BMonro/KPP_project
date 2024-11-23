@@ -135,11 +135,3 @@ const getLocalStorageData = () => {
   return data;
 };
 
-// Форматування замовлення для клієнта
-const formatOrder = (clientOrder) => {
-  return `
-    ID: ${clientOrder.orderID}
-    Pizzas: ${clientOrder.pizzas.map((pizza) => `"${pizza.name}"`).join(", ")}
-    Drinks: ${clientOrder.drinks.map((drink) => `"${drink.name}"`).join(", ")}
-  `.trim();
-};
