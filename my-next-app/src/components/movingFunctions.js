@@ -1,5 +1,5 @@
 import {sendDataToKitchen } from "@/utils/sentData";
-let waitingAreaOffset = 0; // Статична змінна для відстеження зміщення
+let index = 0; // Статична змінна для відстеження зміщення
 
   
   export function moveToCookingStation(cooker, stationName, stages) {
@@ -67,14 +67,12 @@ let waitingAreaOffset = 0; // Статична змінна для відсте�
     
       // Отримуємо координати .table-image
       const tableRect = tableElement.getBoundingClientRect();
-      const waitingAreaX = tableRect.right + 75; // Координата X (праворуч від столу, з відступом)
-      
-      // Визначаємо Y з урахуванням кількості клієнтів
-      const clientSpacing = 20; // Відстань між клієнтами
-      const waitingAreaY = tableRect.top - 45 + waitingAreaOffset;
-    
+
+      const waitingAreaX = tableRect.right + 75 +  Math.floor(index / 5)*25; // Координата X (праворуч від столу, з відступом)
+      const waitingAreaY = tableRect.top - 45 + (index%5)*25;
+
       // Оновлюємо зміщення для наступного клієнта
-      waitingAreaOffset += clientSpacing;
+      index ++;
     
       // Переміщуємо клієнта до розрахованої позиції
       client.moveTo(waitingAreaX, waitingAreaY, () => {

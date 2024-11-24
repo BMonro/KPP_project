@@ -15,6 +15,7 @@ import useClientWebSocket from "@/hooks/useClientWebSocket";
 export default function Simulation() {
 
   // Стани для клієнтів та інших елементів
+  const [orders, setOrders] = useState([]); // Create a new state for storing orders
   const [clients, setClients] = useState([]);
   const [cashRegisters, setCashRegisters] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -60,41 +61,42 @@ export default function Simulation() {
 
 
   useClientWebSocket(clients, setClients, setCashRegisters);
-  // useCookerWebSocket();
-  // Обробка WebSocket з бекенду для отримання даних
-  // useEffect(() => {
-  //   const socket = new WebSocket("ws://localhost:8080/new/state");
-  
-  //   socket.onopen = () => {
-  //     console.log("WebSocket connected");
-  //   };
-  
-  //   socket.onmessage = (event) => {
-  //     try {
-  //       const data = JSON.parse(event.data);
-  //       console.log("Received data:", data);
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:8080/new/state");
 
-  //     } catch (error) {
-  //       console.error("Error processing message:", error);
-  //     }
-  //   };
-  
-  //   socket.onerror = (error) => {
-  //     console.error("WebSocket error:", error);
-  //   };
-  
-  //   socket.onclose = () => {
-  //     console.log("WebSocket closed");
-  //   };
-  
-  //   return () => {
-  //     socket.close();
-  //   };
-  // }, []);
-  
- 
-  console.log(cookers, stages)
+    socket.onopen = () => {
+      console.log("WebSocket connected");
+    };
 
+    socket.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        console.log("Received data to modal:", data);
+
+        // Update orders with the received data
+        setOrders(data); // Set the data in orders state
+      } catch (error) {
+        console.error("Error processing message:", error);
+      }
+    };
+
+    socket.onerror = (error) => {
+      console.error("WebSocket error:", error);
+      // Можна спробувати перепідключити чи повідомити користувача
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket closed");
+      // Можна додати логіку повторного підключення, якщо потрібно
+    };
+
+    return () => {
+      if (socket.readyState === WebSocket.OPEN) {
+        socket.close(); // Перевіряємо, чи WebSocket відкритий перед закриттям
+      }
+    };
+  }, []);
+  
   
 
   // Відкриття модального вікна
@@ -126,8 +128,18 @@ export default function Simulation() {
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <h2>Список замовлень</h2>
             <div className="order-list">
-              {/* Замовлення, які потрібно відображати */}
-
+              {/* Відображаємо замовлення, якщо є дані */}
+              {orders.length > 0 ? (
+                orders.map((order) => (
+                  <div key={order.orderId} className="order-item">
+                    <div className="order-id">ID: {order.orderId}</div>
+                    <div className="pizza-name">Pizza: {order.nameOfPizza}</div>
+                    <div className="status">Status: {order.status}</div>
+                  </div>
+                ))
+              ) : (
+                <p>Немає замовлень</p>
+              )}
             </div>
             <button onClick={closeModal} className="close-button">
               Закрити
