@@ -1,10 +1,12 @@
 export default 
 // Клас Cashier
 class Cashier {
-  constructor(container, name, x, y) {
+  constructor(container, name, index, isFree, x, y) {
     this.container = container;
     this.name = name;
+    this.index = index;
     this.imageSrc = "/simulation/images/Cashier.png";
+    this.isFree = isFree;
     this.x = x;
     this.y = y;
     this.createCashier();

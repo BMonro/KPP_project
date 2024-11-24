@@ -1,3 +1,7 @@
+import {sendDataToKitchen } from "@/utils/sentData";
+let waitingAreaOffset = 0; // Статична змінна для відстеження зміщення
+
+  
   export function moveToCookingStation(cooker, stationName, stages) {
       // Знаходимо потрібну станцію за назвою
       const station = stages.find((stage) => stage.name === stationName);
@@ -22,31 +26,78 @@
       }, stationName);
     }
 
-    export function moveToCashRegister(client, cashRegisterIndex, setCashRegisters) {
-      setCashRegisters((prevRegisters) => {
-        const register = prevRegisters[cashRegisterIndex];
-        if (!register || !register.isFree) {
-          console.log(`Cash Register ${cashRegisterIndex + 1} is currently occupied or does not exist.`);
-          return prevRegisters; // If the register is occupied, do nothing
+    export function moveToCashRegister(client, cashierIndex, setCashRegisters) {
+      
+      setCashRegisters((prevCashiers) => {
+        const cashier = prevCashiers[cashierIndex];
+        if (!cashier || !cashier.isFree) {
+          console.log(`Cashier ${cashierIndex + 1} is currently occupied or does not exist.`);
+          return prevCashiers; // Якщо каса зайнята, нічого не робимо
         }
     
-        const updatedRegisters = [...prevRegisters];
-        updatedRegisters[cashRegisterIndex] = { ...register, isFree: false }; // Mark register as occupied
+        const updatedCashiers = [...prevCashiers];
+        updatedCashiers[cashierIndex] = { ...cashier, isFree: false }; // Позначаємо касу зайнятою
     
-        // Move the client to the register
-        client.moveTo(register.x, register.y + register.y * 0.6, () => {
-          console.log(`${client.name} reached ${register.name}.`);
+        // Переміщуємо клієнта до касира
+        client.moveTo(cashier.x, cashier.y + 75, () => {
+          console.log(`${client.name} reached ${cashier.name}.`);
           setTimeout(() => {
             setCashRegisters((prev) => {
-              const resetRegisters = [...prev];
-              resetRegisters[cashRegisterIndex] = { ...register, isFree: true }; // Free up register after delay
-              console.log(`${register.name} is now free.`);
-              return resetRegisters;
+              const resetCashiers = [...prev];
+              resetCashiers[cashierIndex] = { ...cashier, isFree: true }; // Робимо касу вільною після затримки
+              console.log(`${cashier.name} is now free.`);
+              return resetCashiers;
             });
-          }, 3000); // Delay before making the register available
+            console.log("moving to waiting station");
+            sendDataToKitchen(client.info);
+            moveToWaitingStation(client);
+          }, 3000); 
         });
     
-        return updatedRegisters;
+        return updatedCashiers;
       });
-  }
-  
+    }
+    export function moveToWaitingStation(client) {
+      // Знаходимо елемент .table-image для визначення базової позиції
+      const tableElement = document.querySelector(".table-image");
+      if (!tableElement) {
+        console.error("Table element not found.");
+        return;
+      }
+    
+      // Отримуємо координати .table-image
+      const tableRect = tableElement.getBoundingClientRect();
+      const waitingAreaX = tableRect.right + 75; // Координата X (праворуч від столу, з відступом)
+      
+      // Визначаємо Y з урахуванням кількості клієнтів
+      const clientSpacing = 20; // Відстань між клієнтами
+      const waitingAreaY = tableRect.top - 45 + waitingAreaOffset;
+    
+      // Оновлюємо зміщення для наступного клієнта
+      waitingAreaOffset += clientSpacing;
+    
+      // Переміщуємо клієнта до розрахованої позиції
+      client.moveTo(waitingAreaX, waitingAreaY, () => {
+        console.log(`${client.name} reached waiting area`);
+      });
+    }
+
+    export function moveToExit(client) {
+      // Визначаємо розміри екрана для правого нижнього кута
+      const screenWidth = window.innerWidth;
+      const screenHeight = window.innerHeight;
+    
+      // Розраховуємо координати правого нижнього кута
+      const exitX = screenWidth - 20; // Відступ 20 пікселів від правого краю
+      const exitY = screenHeight - 20; // Відступ 20 пікселів від нижнього краю
+    
+      // Переміщуємо клієнта до цієї точки
+      client.moveTo(exitX, exitY, () => {
+        console.log(`${client.name} has exited the pizzeria.`);
+    
+        setTimeout(() => {
+          client.element.remove(); // Видаляємо елемент з DOM
+        }, 500); // Невелика затримка для анімації зникнення
+      });
+    }
+    

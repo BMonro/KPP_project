@@ -4,9 +4,8 @@ import { useEffect, useState, useRef } from "react";
 import Header from "@/components/SimulationHeader";
 import Client from "@/components/Client";
 
-import { sendDataToBackend, sendDataToKitchen } from "@/utils/sentData";
+import { sendDataToBackend} from "@/utils/sentData";
 import { moveToCookingStation } from "@/components/movingFunctions";
-import { moveToCashRegister } from "@/components/movingFunctions";
 import { initializeCookersAndStations } from "@/components/cookersWork";
 import { initializeCashRegisters } from "@/components/CashRegisters";
 import { initializeCashiers } from "@/components/cashiersWork";
@@ -55,9 +54,9 @@ export default function Simulation() {
 
   function testF() {
       moveToCookingStation(cookers[0], stages[1].name, stages);
-  moveToCookingStation(cookers[1], stages[3].name,stages);
-  moveToCookingStation(cookers[2], stages[2].name,stages);
-  }
+      moveToCookingStation(cookers[1], stages[3].name,stages);
+      moveToCookingStation(cookers[2], stages[2].name,stages);
+    }
 
 
   useClientWebSocket(clients, setClients, setCashRegisters);

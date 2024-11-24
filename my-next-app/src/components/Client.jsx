@@ -1,10 +1,11 @@
 // Клас Client
 export default class Client {
-  constructor(container, name, order, status, x, y) {
+  constructor(container, name, order, cashierID, info, x, y) {
     this.container = container;
     this.name = name;
     this.order = order;
-    this.status = status;
+    this.cashierID = cashierID;
+    this.info = info;
     this.imageSrc = "/simulation/images/client.png";
     this.x = x;
     this.y = y;
