@@ -45,7 +45,7 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
                     `Client ${clients.length + 1}`,
                     formatOrder(clientOrder),
                     cashierID,
-                    data,
+                    //data,
                     clientX,
                     clientY
                 );
