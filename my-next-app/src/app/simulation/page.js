@@ -110,7 +110,7 @@ export default function Simulation() {
     };
 }, [orders]);
 
-  // useMoveCookers(orders, setOrders, cookers, stages, isSended)
+  useMoveCookers(orders, setOrders, cookers, stages, isSended)
   
 
   // Відкриття модального вікна

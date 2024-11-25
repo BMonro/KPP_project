@@ -32,7 +32,8 @@ const useMoveCookers = (orders, setOrders, cookers, stages, isSended) => {
                 if (order.status !== "ReadyForPickUp") {
                     console.log("Зміна статусу ордера:", order);
 
-                    const newStatusIndex = statuses.indexOf(order.status) + 1;
+                    let newStatusIndex = statuses.indexOf(order.status) + 1;
+                    console.log(newStatusIndex)
                     if (newStatusIndex < statuses.length) {
                         const newStatus = statuses[newStatusIndex];
                         setOrders((currentOrders) => {
@@ -44,12 +45,14 @@ const useMoveCookers = (orders, setOrders, cookers, stages, isSended) => {
                             return updatedOrders;
                         });
                         console.log("Змінений статус ордера:", { ...order, status: newStatus });
-                        moveToCookingStation(cooker, stages[newStatusIndex].name, stages);
+                        console.log(newStatusIndex)
                     }
+                    console.log(newStatusIndex)
+                    moveToCookingStation(cooker, stages[newStatusIndex].name, stages);
                     break;
                 }
                 else {
-                    moveToCookingStation(cooker, stages[stages.length].name, stages);
+                    moveToCookingStation(cooker, stages[stages.length - 1].name, stages);
                     console.log("кінець ордера:", order);
                     break;
                 }
