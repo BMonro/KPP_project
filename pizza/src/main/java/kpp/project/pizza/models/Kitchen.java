@@ -7,6 +7,8 @@ import kpp.project.pizza.statuses.Ordered;
 import java.util.List;
 import java.util.Queue;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class Kitchen  extends Thread{
     private static int mode;
@@ -28,6 +30,7 @@ public class Kitchen  extends Thread{
     public synchronized boolean isRunning() {
         return running;
     }
+    private static ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
     @Override
     public void run() {
         running = true;
@@ -47,48 +50,57 @@ public class Kitchen  extends Thread{
             if(!pizzas.isEmpty()){
                 Cooker cooker = STATIC_VALUES.cookers.get(0);
                 System.out.println(cooker.getName()+" "+cooker.getPizza());
-                while (cooker.getPizza()!=null){
+                while (cooker.getPizza()!=null || pizzas.isEmpty()){
                     try {
+                        //System.out.println("Waiting for pizza");
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
-                cooker.setPizza(pizzas.poll());
-                logger.update(cooker.getPizza());
-                Thread t = new Thread(()->{
-                    try {
-                        for(int i=1;i<STATIC_VALUES.cookers.size();i++){
-                            Pizza pizza1 = STATIC_VALUES.cookers.get(i-1).getPizza();
-                            double time = pizza1.getCookingTime()/4.0;
-                            cooker.checkAndPauseIfNeeded();
-                            pizza1.nextStatus();
-                            logger.update(pizza1);
-                            sendpizzaDtoData(new PizzaDataDTO(pizza1.getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""),pizza1.getName(),pizza1.getOrderId()));
-                            Cooker cooker1 = STATIC_VALUES.cookers.get(i);
-                            Thread.sleep((int)(time*1000));
-                            STATIC_VALUES.cookers.get(i-1).setPizza(null);
-                            System.out.println(cooker.getName()+" "+cooker.getPizza());
-                            while (cooker1.getPizza()!=null){
-                                try {
-                                    Thread.sleep(50);
-                                } catch (InterruptedException e) {
-                                    throw new RuntimeException(e);
+                Pizza pizza = pizzas.poll();
+                cooker.setPizza(pizza);
+                logger.update(pizza);
+                cachedThreadPool.execute(()->{
+                            try {
+                                for(int i=1;i<STATIC_VALUES.cookers.size();i++){
+                                    Pizza pizza1 = STATIC_VALUES.cookers.get(i-1).getPizza();
+                                    double time = pizza1.getCookingTime()/4.0;
+                                    cooker.checkAndPauseIfNeeded();
+                                    pizza1.nextStatus();
+                                    logger.update(pizza1);
+                                    sendpizzaDtoData(new PizzaDataDTO(pizza1.getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""),pizza1.getName(),pizza1.getOrderId()));
+                                    Cooker cooker1 = STATIC_VALUES.cookers.get(i);
+                                    Thread.sleep((int)(time*1000));
+                                    STATIC_VALUES.cookers.get(i-1).setPizza(null);
+                                    System.out.println(cooker.getName()+" "+cooker.getPizza());
+                                    while (cooker1.getPizza()!=null){
+                                        try {
+                                            //System.out.println("Waiting for "+ i);
+                                            Thread.sleep(50);
+                                        } catch (InterruptedException e) {
+                                            throw new RuntimeException(e);
+                                        }
+                                    }
+                                    cooker1.setPizza(pizza1);
                                 }
+                                Pizza pizza1 = STATIC_VALUES.cookers.get(4).getPizza();
+                                double time = pizza1.getCookingTime()/4.0;
+                                Thread.sleep((int)(time*1000));
+                                pizza1.nextStatus();
+                                logger.update(pizza1);
+                                sendpizzaDtoData(new PizzaDataDTO(pizza1.getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""),pizza1.getName(),pizza1.getOrderId()));
+                                STATIC_VALUES.cookers.get(4).setPizza(null);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
                             }
-                            cooker1.setPizza(pizza1);
-                        }
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-                t.start();
+                        });
             }
         }
     }
 
     public static int[] divideTimeByProportions(int totalTime) {
-        double[] proportions = new double[]{0.2, 0.3, 0.3, 0.2};
+        double[] proportions = new double[]{0.2, 0.2, 0.2, 0.2, 0.2};
         int[] parts = new int[proportions.length];
         int sum = 0;
 
@@ -116,8 +128,7 @@ public class Kitchen  extends Thread{
                 int timeToCook = pizzaFromQueue.getCookingTime();
                 System.out.println("Час приготування піци: " + timeToCook);
                 int[] times = divideTimeByProportions(timeToCook);
-
-                Thread t = new Thread(() -> {
+                cachedThreadPool.execute(() -> {
                     try {
                         Thread.sleep(times[0] * 1000);
                         cooker.checkAndPauseIfNeeded();
@@ -145,12 +156,13 @@ public class Kitchen  extends Thread{
                         cooker.getPizza().nextStatus();
                         logger.update(cooker.getPizza());
                         sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
-                        System.out.println("Процес завершено!");
+                        System.out.println("Четвертий етап завершено!");
 
+                        Thread.sleep(times[4] * 1000);
                         cooker.getPizza().nextStatus();
                         logger.update(cooker.getPizza());
                         sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
-
+                        System.out.println("Процес завершено!");
                         synchronized (STATIC_VALUES.cookers) {
                             STATIC_VALUES.cookers.add(cooker);
                         }
@@ -158,8 +170,6 @@ public class Kitchen  extends Thread{
                         System.err.println("Потік було перервано: " + e.getMessage());
                     }
                 });
-
-                t.start();
             }
         }
     }

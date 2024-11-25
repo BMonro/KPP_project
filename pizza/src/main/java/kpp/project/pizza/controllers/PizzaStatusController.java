@@ -17,14 +17,13 @@ public class PizzaStatusController {
         List<Order> orders = Pizzeria.getInstance().getOrders();
         List<PizzaDataDTO> items = orders.stream()
                 .flatMap(order -> order.getPizzas().stream())
-                .map(pizza ->  new PizzaDataDTO(pizza.getState().getClass().getName(), pizza.getName(), pizza.getOrderId()))
+                .map(pizza ->  new PizzaDataDTO(pizza.getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""), pizza.getName(), pizza.getOrderId()))
                 .collect(Collectors.toList());
         //List<PizzaDataDTO> items = new ArrayList<>();
         /*items.add(new PizzaDataDTO("new", "pizza", 1));
         items.add(new PizzaDataDTO("new", "pizza", 1));
         items.add(new PizzaDataDTO("new", "pizza", 1));
         items.add(new PizzaDataDTO("new", "pizza", 1));*/
-        System.out.println("Order to Front");
         return ResponseEntity.ok(items);
     }
 }
