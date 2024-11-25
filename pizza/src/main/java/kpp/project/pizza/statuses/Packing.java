@@ -14,6 +14,9 @@ public class Packing implements IPizzaStatus {
         pizza.setState(new ReadyForPickUp());
         int orderId = pizza.getOrderId();
         List<Order> orders = Pizzeria.getInstance().getOrders();
+        if(orders.isEmpty()){
+            return;
+        }
         for (Order order : orders) {
             if (order.getOrderID() == orderId) {
                 List<Pizza> pizzas = order.getPizzas();
