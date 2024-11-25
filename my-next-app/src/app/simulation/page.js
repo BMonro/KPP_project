@@ -10,6 +10,7 @@ import { initializeCookersAndStations } from "@/components/cookersWork";
 import { initializeCashRegisters } from "@/components/CashRegisters";
 import { initializeCashiers } from "@/components/cashiersWork";
 import useClientWebSocket from "@/hooks/useClientWebSocket";
+import useMoveCookers from "@/hooks/useMoveCookers";
 
 
 export default function Simulation() {
@@ -62,41 +63,39 @@ export default function Simulation() {
 
   useClientWebSocket(clients, setClients, setCashRegisters);
   useEffect(() => {
-    const socket = new WebSocket("ws://localhost:8080/new/state");
+    const socket = new WebSocket("ws://localhost:8080/new/state");  // Використовуємо шлях /new/state
 
     socket.onopen = () => {
-      console.log("WebSocket connected");
-    };
+      console.log("WebSocket connected to /new/state");
+      socket.send(JSON.stringify({ message: "Hello from client" })); // Для перевірки
+  };
 
     socket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        console.log("Received data to modal:", data);
-
-        // Update orders with the received data
-        setOrders(data); // Set the data in orders state
-      } catch (error) {
-        console.error("Error processing message:", error);
-      }
+        try {
+            const data = JSON.parse(event.data); // Якщо сервер відправляє JSON-дані
+            console.log("Received data:", data);
+            setOrders(data); // Зберігаємо дані у стані, щоб оновити інтерфейс
+        } catch (error) {
+            console.error("Error parsing message:", error);
+        }
     };
 
     socket.onerror = (error) => {
-      console.error("WebSocket error:", error);
-      // Можна спробувати перепідключити чи повідомити користувача
+        console.error("WebSocket error:", error);
     };
 
     socket.onclose = () => {
-      console.log("WebSocket closed");
-      // Можна додати логіку повторного підключення, якщо потрібно
+        console.log("WebSocket closed");
     };
 
     return () => {
-      if (socket.readyState === WebSocket.OPEN) {
-        socket.close(); // Перевіряємо, чи WebSocket відкритий перед закриттям
-      }
+        if (socket.readyState === WebSocket.OPEN) {
+            socket.close();  // Закриваємо з'єднання при розмонтуванні компонента
+        }
     };
-  }, []);
-  
+}, [orders]);
+
+  useMoveCookers(orders, cookers, stages)
   
 
   // Відкриття модального вікна
