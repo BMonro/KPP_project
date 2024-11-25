@@ -34,18 +34,7 @@ const initialPizzas = [
         price: "8",
         img: pizza
     },
-    {
-        name: "Greek pizza",
-        cookingTime: "20",
-        price: "8",
-        img: pizza
-    },
-    {
-        name: "Greek pizza",
-        cookingTime: "20",
-        price: "8",
-        img: pizza
-    },
+
 ];
 
 const initialDrinks = [
