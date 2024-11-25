@@ -23,7 +23,7 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
             try {
                 const data = JSON.parse(event.data);
                 const { order: clientOrder, idCashier } = data;
-                console.log("Received data:", clientOrder);
+                // console.log("Received data:", clientOrder);
                 console.log(JSON.stringify(clientOrder));
 
                 const cashierID = idCashier || "1";
@@ -45,10 +45,11 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
                     `Client ${clients.length + 1}`,
                     formatOrder(clientOrder),
                     cashierID,
-                    data,
+                    //data,
                     clientX,
                     clientY
                 );
+
 
                 setClients((prevClients) => [...prevClients, newClient]);
                 sendDataToKitchen(clientOrder);
@@ -70,8 +71,8 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
             console.log("WebSocket connection closed.");
         };
 
-        return () => socket.close();
-    }, [clients]); // Порожній масив залежностей для стабільності
+        // return () => socket.close();
+    }, [clients]);
 };
 
 const calculateClientPosition = (casaRect, index) => {

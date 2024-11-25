@@ -17,7 +17,6 @@ export const sendDataToBackend = async (data) => {
         console.error('Error:', error);
     }
 };
-
 export const sendDataToKitchen = async (data) => {
     try {
         console.log("sendDataToKitchen called with data:", data);
@@ -26,13 +25,13 @@ export const sendDataToKitchen = async (data) => {
         if (Object.keys(data).length > 0) {
             console.log("Sending data to kitchen:", data);
 
-            // Відправка даних на сервер
+            // Відправка даних на сервер без вкладення у поле "order"
             const response = await fetch('http://localhost:8080/kitchen', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ order: data }),
+                body: JSON.stringify(data), // Відправляємо тільки сам об'єкт Order
             });
 
             // Лог після отримання відповіді
@@ -42,11 +41,10 @@ export const sendDataToKitchen = async (data) => {
             const responseData = await response.json();
             console.log('Success:', responseData);
         } else {
-            console.log('No data in localStorage');
+            console.log('No data to send');
         }
     } catch (error) {
         // Лог помилки
         console.error('Error in sendDataToKitchen:', error);
     }
 };
- 
