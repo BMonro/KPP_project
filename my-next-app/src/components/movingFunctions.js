@@ -7,10 +7,10 @@ let index = 0; // Статична змінна для відстеження з
       const station = stages.find((stage) => stage.name === stationName);
     
       // Якщо станція не знайдена або вона зайнята, виходимо
-      if (!station || !station.isFree) {
-        console.log(`${stationName} is currently occupied or does not exist.`);
-        return;
-      }
+      // if (!station || !station.isFree) {
+      //   console.log(`${stationName} is currently occupied or does not exist.`);
+      //   return;
+      // }
     
       // Робимо станцію зайнятою
       station.isFree = false;

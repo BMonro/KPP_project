@@ -2,7 +2,7 @@ import { moveToCookingStation } from "@/components/movingFunctions";
 import Cooker from "./cooker";
 
 
-export const initializeCookersAndStations = (tableElement, container, setCookers, setStages) => {
+export const initializeCookersAndStations = (tableElement, container, setCookers, setStages, countOfCooks) => {
     const tableRect = tableElement.getBoundingClientRect();
     const { left: tableX, top: tableY, width: tableWidth, height: tableHeight } = tableRect;
     const sliceTable = tableWidth / 4;
@@ -20,7 +20,7 @@ export const initializeCookersAndStations = (tableElement, container, setCookers
   
 
     const initializeCookers = () => {
-      const newCookers = Array.from({ length: 3 }, (_, i) => {
+      const newCookers = Array.from({ length: countOfCooks }, (_, i) => {
           const cookerX = tableX + i * tableWidth * 0.09;
           const cookerY = tableY + tableHeight * 0.3;
           return new Cooker(container, `Chef ${i + 1}`, cookerX, cookerY);

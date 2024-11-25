@@ -15,6 +15,7 @@ import { fetchOrders } from "@/utils/getOrders";
 
 export default function Simulation() {
 
+
   // Стани для клієнтів та інших елементів
   const [orders, setOrders] = useState([]); // Create a new state for storing orders
   const [clients, setClients] = useState([]);
@@ -35,6 +36,7 @@ export default function Simulation() {
       console.log(data);
       sendDataToBackend(data);
 
+      
       hasSentData.current = true;
   }, []);
 
@@ -45,11 +47,15 @@ export default function Simulation() {
     const container = document.getElementById("cooker-container");
     const casaElement = document.querySelector(".casa-image");
     const tableElement = document.querySelector(".table-image");
+    console.log(Number(localStorage.getItem("choosedCooks")))
+    const countOfCooks = Number(localStorage.getItem("choosedCooks")) || 1;
+
+
 
     if (container && casaElement && tableElement) {
       console.log("initial")
       casaElement.onload = () => initializeCashRegisters(casaElement, setCashRegisters);
-      tableElement.onload = () => initializeCookersAndStations(tableElement, container, setCookers, setStages);
+      tableElement.onload = () => initializeCookersAndStations(tableElement, container, setCookers, setStages, countOfCooks);
       casaElement.onload = () => initializeCashiers(casaElement, container, setCashRegisters);
       hasInitPlace.current = true;
       
@@ -131,19 +137,19 @@ useEffect(() => {
 
   
   
-function handlerDeleteOrder(orderToDelete) {
-    setOrders((currentOrders) => {
+// function handlerDeleteOrder(orderToDelete) {
+//     setOrders((currentOrders) => {
      
-      return currentOrders.filter(order => order.orderId !== orderToDelete.orderId)
+//       return currentOrders.filter(order => order.orderId !== orderToDelete.orderId)
       
       
-    }
+//     }
       
         
-    );
+//     );
     
-}
-useMoveCookers(orders, setOrders, cookers, stages, isSended, handlerDeleteOrder)
+// }
+useMoveCookers(orders, setOrders, cookers, stages, isSended)
 
   // Відкриття модального вікна
   const handleTableClick = () => {
