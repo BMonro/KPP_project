@@ -11,7 +11,7 @@ import { initializeCashRegisters } from "@/components/CashRegisters";
 import { initializeCashiers } from "@/components/cashiersWork";
 import useClientWebSocket from "@/hooks/useClientWebSocket";
 import useMoveCookers from "@/hooks/useMoveCookers";
-
+import { fetchOrders } from "@/utils/getOrders";
 
 export default function Simulation() {
 
@@ -24,6 +24,10 @@ export default function Simulation() {
   const [stages, setStages] = useState([]);
   const hasSentData = useRef(false); 
   const hasInitPlace = useRef(false); 
+  const [ordersForModal, setOrdersForModal] = useState([]);
+
+  const [isSended, setIsSended] = useState(true);
+
   useEffect(() => {
       if (hasSentData.current) return;
 
@@ -67,14 +71,25 @@ export default function Simulation() {
 
     socket.onopen = () => {
       console.log("WebSocket connected to /new/state");
-      socket.send(JSON.stringify({ message: "Hello from client" })); // Для перевірки
+      // socket.send(JSON.stringify({ message: "Hello from client" })); // Для перевірки
   };
 
     socket.onmessage = (event) => {
         try {
             const data = JSON.parse(event.data); // Якщо сервер відправляє JSON-дані
             console.log("Received data:", data);
-            setOrders(data); // Зберігаємо дані у стані, щоб оновити інтерфейс
+            setOrders(currentOrders => {
+              const existingIndex = currentOrders.findIndex(order => order.orderId === data.orderId);
+              if (existingIndex !== -1) {
+                const updatedOrders = [...currentOrders];
+                updatedOrders[existingIndex] = { ...updatedOrders[existingIndex], id: data.newId };
+                return updatedOrders;
+              } else {
+                return [data, ...currentOrders];
+              }
+            });
+            // setIsSended(currentStatus => !currentStatus)
+            
         } catch (error) {
             console.error("Error parsing message:", error);
         }
@@ -95,11 +110,14 @@ export default function Simulation() {
     };
 }, [orders]);
 
-  useMoveCookers(orders, cookers, stages)
+  // useMoveCookers(orders, setOrders, cookers, stages, isSended)
   
 
   // Відкриття модального вікна
-  const handleTableClick = () => setIsModalOpen(true);
+  const handleTableClick = () => {
+    setIsModalOpen(true)
+    fetchOrders(setOrdersForModal);
+  };
   const closeModal = () => setIsModalOpen(false);
 
   return (
@@ -128,9 +146,9 @@ export default function Simulation() {
             <h2>Список замовлень</h2>
             <div className="order-list">
               {/* Відображаємо замовлення, якщо є дані */}
-              {orders.length > 0 ? (
-                orders.map((order) => (
-                  <div key={order.orderId} className="order-item">
+              {ordersForModal.length > 0 ? (
+                ordersForModal.map((order) => (
+                  <div key={order.id} className="order-item">
                     <div className="order-id">ID: {order.orderId}</div>
                     <div className="pizza-name">Pizza: {order.nameOfPizza}</div>
                     <div className="status">Status: {order.status}</div>

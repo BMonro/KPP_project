@@ -5,6 +5,12 @@ export default class Cooker {
     this.imageSrc = "/simulation/images/Cooker.png";
     this.x = x;
     this.y = y;
+    this.selectedOrder = {
+      orderId: null,
+      status: null,
+      nameOfPizza: null
+    }
+    this.isFree = true;
     this.createCooker();
   }
 

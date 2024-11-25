@@ -12,6 +12,7 @@ export const initializeCookersAndStations = (tableElement, container, setCookers
       { name: "CookingStation", x: tableX + sliceTable, y: tableY + tableHeight * 0.05, isFree: true },
       { name: "BakingStation", x: tableX + sliceTable * 2, y: tableY + tableHeight * 0.05, isFree: true },
       { name: "SlicingStation", x: tableX + sliceTable * 3, y: tableY + tableHeight / 3, isFree: true },
+      { name: "SlicingStation", x: tableX + tableWidth, y: tableY + tableHeight / 2, isFree: true },
     ];
 
     setStages(stages);
