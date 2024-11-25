@@ -24,7 +24,9 @@ public class Order {
 
     // Поле для зберігання статусу замовлення
     private String status ;
-
+    public static void minus(){
+        numberOfOrders--;
+    }
     // Гетери та сетери
     public int getOrderID() {
         return orderID;
