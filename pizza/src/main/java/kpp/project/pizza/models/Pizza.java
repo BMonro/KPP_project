@@ -11,6 +11,7 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Pizza implements Cloneable, Serializable {
+    private static int numberOfPizzas = 0;
     private int orderId;
     // Поле для зберігання назви
     private String name;
@@ -34,7 +35,7 @@ public class Pizza implements Cloneable, Serializable {
         this.size = size;
         this.price = price;
         this.cookingTime = cookingTime;
-        this.orderId = orderId;
+        this.orderId = ++numberOfPizzas;
     }
 
     // Поле для зберігання часу приготування
