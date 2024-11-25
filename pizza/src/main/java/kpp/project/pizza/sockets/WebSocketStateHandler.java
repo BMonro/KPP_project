@@ -7,7 +7,7 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class WebSocketStateHandler extends TextWebSocketHandler {
-
+    private final static Object lock = new Object();
     private static final CopyOnWriteArrayList<WebSocketSession> sessions = new CopyOnWriteArrayList<>();
 
     @Override
@@ -23,12 +23,14 @@ public class WebSocketStateHandler extends TextWebSocketHandler {
     }
 
     public static void sendMessageToAll(String message) {
-        for (WebSocketSession session : sessions) {
-            if (session.isOpen()) {
-                try {
-                    session.sendMessage(new TextMessage(message));
-                } catch (Exception e) {
-                    e.printStackTrace();
+        synchronized (lock) {
+            for (WebSocketSession session : sessions) {
+                if (session.isOpen()) {
+                    try {
+                        session.sendMessage(new TextMessage(message));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
