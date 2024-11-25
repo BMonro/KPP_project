@@ -88,7 +88,7 @@ public class Kitchen  extends Thread{
     }
 
     public static int[] divideTimeByProportions(int totalTime) {
-        double[] proportions = new double[]{0.2, 0.3, 0.3, 0.2};
+        double[] proportions = new double[]{0.2, 0.2, 0.2, 0.2, 0.2};
         int[] parts = new int[proportions.length];
         int sum = 0;
 
@@ -145,12 +145,13 @@ public class Kitchen  extends Thread{
                         cooker.getPizza().nextStatus();
                         logger.update(cooker.getPizza());
                         sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
-                        System.out.println("Процес завершено!");
+                        System.out.println("Четвертий етап завершено!");
 
+                        Thread.sleep(times[4] * 1000);
                         cooker.getPizza().nextStatus();
                         logger.update(cooker.getPizza());
                         sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
-
+                        System.out.println("Процес завершено!");
                         synchronized (STATIC_VALUES.cookers) {
                             STATIC_VALUES.cookers.add(cooker);
                         }
