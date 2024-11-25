@@ -47,15 +47,17 @@ public class Kitchen  extends Thread{
             if(!pizzas.isEmpty()){
                 Cooker cooker = STATIC_VALUES.cookers.get(0);
                 System.out.println(cooker.getName()+" "+cooker.getPizza());
-                while (cooker.getPizza()!=null){
+                while (cooker.getPizza()!=null || pizzas.isEmpty()){
                     try {
+                        //System.out.println("Waiting for pizza");
                         Thread.sleep(50);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
                 }
-                cooker.setPizza(pizzas.poll());
-                logger.update(cooker.getPizza());
+                Pizza pizza = pizzas.poll();
+                cooker.setPizza(pizza);
+                logger.update(pizza);
                 Thread t = new Thread(()->{
                     try {
                         for(int i=1;i<STATIC_VALUES.cookers.size();i++){
@@ -71,6 +73,7 @@ public class Kitchen  extends Thread{
                             System.out.println(cooker.getName()+" "+cooker.getPizza());
                             while (cooker1.getPizza()!=null){
                                 try {
+                                    //System.out.println("Waiting for "+ i);
                                     Thread.sleep(50);
                                 } catch (InterruptedException e) {
                                     throw new RuntimeException(e);
@@ -78,6 +81,13 @@ public class Kitchen  extends Thread{
                             }
                             cooker1.setPizza(pizza1);
                         }
+                        Pizza pizza1 = STATIC_VALUES.cookers.get(4).getPizza();
+                        double time = pizza1.getCookingTime()/4.0;
+                        Thread.sleep((int)(time*1000));
+                        pizza1.nextStatus();
+                        logger.update(pizza1);
+                        sendpizzaDtoData(new PizzaDataDTO(pizza1.getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""),pizza1.getName(),pizza1.getOrderId()));
+                        STATIC_VALUES.cookers.get(4).setPizza(null);
                     } catch (InterruptedException e) {
                         throw new RuntimeException(e);
                     }
