@@ -11,6 +11,7 @@ export default class Cooker {
       nameOfPizza: null
     }
     this.isFree = true;
+    this.status = null;
     this.createCooker();
   }
 

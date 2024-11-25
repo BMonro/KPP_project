@@ -18,19 +18,19 @@ import juice from "/public/juice.svg";
 const initialPizzas = [
     {
         name: "Greek pizza",
-        cookingTime: "20",
+        cookingTime: "30",
         price: "8",
         img: pizza
     },
     {
         name: "Neapolitan pizza",
-        cookingTime: "25",
+        cookingTime: "35",
         price: "10",
         img: pizza
     },
     {
         name: "Greek pizza",
-        cookingTime: "20",
+        cookingTime: "30",
         price: "8",
         img: pizza
     },

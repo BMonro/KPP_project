@@ -74,26 +74,40 @@ export default function Simulation() {
       // socket.send(JSON.stringify({ message: "Hello from client" })); // Для перевірки
   };
 
-    socket.onmessage = (event) => {
-        try {
-            const data = JSON.parse(event.data); // Якщо сервер відправляє JSON-дані
-            console.log("Received data:", data);
-            setOrders(currentOrders => {
-              const existingIndex = currentOrders.findIndex(order => order.orderId === data.orderId);
-              if (existingIndex !== -1) {
-                const updatedOrders = [...currentOrders];
-                updatedOrders[existingIndex] = { ...updatedOrders[existingIndex], id: data.newId };
-                return updatedOrders;
-              } else {
-                return [data, ...currentOrders];
-              }
-            });
-            // setIsSended(currentStatus => !currentStatus)
-            
-        } catch (error) {
-            console.error("Error parsing message:", error);
-        }
-    };
+  socket.onmessage = (event) => {
+    try {
+        const data = JSON.parse(event.data); // Якщо сервер відправляє JSON-дані
+        console.log("Received data:", data);
+
+        setOrders((currentOrders) => {
+            const existingIndex = currentOrders.findIndex(order => order.orderId === data.orderId);
+            console.log(data.status);
+            if(currentOrders[existingIndex]) {
+              console.log(currentOrders[existingIndex].status);
+            }
+        
+            let updatedOrders;
+
+            if (existingIndex !== -1) {
+                // Оновлюємо весь об'єкт, якщо знайдено orderId
+                updatedOrders = [...currentOrders];
+                updatedOrders[existingIndex] = { 
+                    ...updatedOrders[existingIndex], 
+                    ...data // Об'єднуємо всі нові дані
+                };
+            } else {
+                // Додаємо новий ордер, якщо orderId ще немає
+                updatedOrders = [data, ...currentOrders];
+            }
+
+            console.log("Updated orders:", updatedOrders); // Тут ти побачиш новий стан
+            return updatedOrders;
+        });
+        
+    } catch (error) {
+        console.error("Error parsing message:", error);
+    }
+};
 
     socket.onerror = (error) => {
         console.error("WebSocket error:", error);
@@ -108,10 +122,28 @@ export default function Simulation() {
             socket.close();  // Закриваємо з'єднання при розмонтуванні компонента
         }
     };
+}, []);
+
+useEffect(() => {
+  console.log("Orders after update:", orders);
 }, [orders]);
 
-  useMoveCookers(orders, setOrders, cookers, stages, isSended)
+
   
+  
+function handlerDeleteOrder(orderToDelete) {
+    setOrders((currentOrders) => {
+     
+      return currentOrders.filter(order => order.orderId !== orderToDelete.orderId)
+      
+      
+    }
+      
+        
+    );
+    
+}
+useMoveCookers(orders, setOrders, cookers, stages, isSended, handlerDeleteOrder)
 
   // Відкриття модального вікна
   const handleTableClick = () => {

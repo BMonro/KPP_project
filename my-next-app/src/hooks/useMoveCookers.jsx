@@ -5,7 +5,7 @@ import { sendDataToKitchen } from "@/utils/sentData";
 import { moveToCookingStation } from "@/components/movingFunctions";
 
 
-const useMoveCookers = (orders, setOrders, cookers, stages, isSended) => {
+const useMoveCookers = (orders, setOrders, cookers, stages, isSended, handlerDeleteOrder) => {
     const ordersRef = useRef(orders);
 
     useEffect(() => {
@@ -23,41 +23,48 @@ const useMoveCookers = (orders, setOrders, cookers, stages, isSended) => {
             if (cooker.isFree) {
                 cooker.selectedOrder = order;
                 cooker.isFree = false;
+                cooker.status = order.status;
                 console.log("Зайняли ордер:", order);
                 moveToCookingStation(cooker, stages[0].name, stages);
                 break;
             }
+            if (order && cooker.selectedOrder) {
+                if (!cooker.isFree && order.orderId === cooker.selectedOrder.orderId) {
+                    if (order.status !== "ReadyForPickUp") {
+                        console.log("Зміна статусу ордера:", order);
+                        cooker.status = order.status;
 
-            if (!cooker.isFree && order.orderId === cooker.selectedOrder.orderId) {
-                if (order.status !== "ReadyForPickUp") {
-                    console.log("Зміна статусу ордера:", order);
+                        let newStatusIndex = statuses.indexOf(cooker.status);
 
-                    let newStatusIndex = statuses.indexOf(order.status) + 1;
-                    console.log(newStatusIndex)
-                    if (newStatusIndex < statuses.length) {
-                        const newStatus = statuses[newStatusIndex];
-                        setOrders((currentOrders) => {
-                            const updatedOrders = currentOrders.map((currentOrder) =>
-                                currentOrder.orderId === order.orderId
-                                    ? { ...currentOrder, status: newStatus }
-                                    : currentOrder
-                            );
-                            return updatedOrders;
-                        });
-                        console.log("Змінений статус ордера:", { ...order, status: newStatus });
-                        console.log(newStatusIndex)
+                        // if (newStatusIndex < statuses.length) {
+                        //     const newStatus = statuses[newStatusIndex];
+                        //     // setOrders((currentOrders) => {
+                        //     //     const updatedOrders = currentOrders.map((currentOrder) =>
+                        //     //         currentOrder.orderId === order.orderId
+                        //     //             ? { ...currentOrder, status: newStatus }
+                        //     //             : currentOrder
+                        //     //     );
+                        //     //     return updatedOrders;
+                        //     // });
+                        //     console.log("Змінений статус ордера:", { ...order, status: newStatus });
+                        //     console.log(newStatusIndex)
+                        // }
+                        moveToCookingStation(cooker, stages[newStatusIndex].name, stages);
+                        break;
                     }
-                    console.log(newStatusIndex)
-                    moveToCookingStation(cooker, stages[newStatusIndex].name, stages);
-                    break;
-                }
-                else {
-                    moveToCookingStation(cooker, stages[stages.length - 1].name, stages);
-                    console.log("кінець ордера:", order);
-                    break;
-                }
+                    else {
+                        moveToCookingStation(cooker, stages[4].name, stages);
+                        console.log("кінець ордера:", order);
+                        cooker.isFree = false;
+                        cooker.status = null;
+                        cooker.selectedOrder = null;
+                        handlerDeleteOrder(order)
+                        break;
+                    }
 
+                }
             }
+
 
             console.log("Йдемо до наступного кухаря...");
         }
