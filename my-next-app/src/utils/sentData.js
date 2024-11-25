@@ -31,7 +31,7 @@ export const sendDataToKitchen = async (data) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(data), // Відправляємо тільки сам об'єкт Order
+                body: JSON.stringify({data}), // Відправляємо тільки сам об'єкт Order
             });
 
             // Лог після отримання відповіді

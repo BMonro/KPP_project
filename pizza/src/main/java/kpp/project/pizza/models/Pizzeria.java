@@ -68,8 +68,17 @@ public class Pizzeria {
         return orders;
     }
 
+    public boolean containsOrder(int orderID) {
+        // Перевіряємо, чи є у списку замовлення з таким orderID
+        return orders.stream().anyMatch(order -> order.getOrderID() == orderID);
+    }
     // Сетер для orders
     public void addOrder(Order order) {
+        int id = order.getOrderID();
+        if(containsOrder(id)){
+            System.out.println("!23213");
+            return;
+        }
         for(Pizza pizza:order.getPizzas()){
             kitchen.addPizza(pizza);
         }
