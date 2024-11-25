@@ -113,7 +113,7 @@ public class Kitchen  extends Thread{
                 Pizza pizzaFromQueue = pizzas.poll();
                 cooker.setPizza(pizzaFromQueue);
 
-                int timeToCook = 30;//pizzaFromQueue.getCookingTime();
+                int timeToCook = pizzaFromQueue.getCookingTime();
                 System.out.println("Час приготування піци: " + timeToCook);
                 int[] times = divideTimeByProportions(timeToCook);
 
