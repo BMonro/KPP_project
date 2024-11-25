@@ -147,6 +147,10 @@ public class Kitchen  extends Thread{
                         sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
                         System.out.println("Процес завершено!");
 
+                        cooker.getPizza().nextStatus();
+                        logger.update(cooker.getPizza());
+                        sendpizzaDtoData(new PizzaDataDTO(cooker.getPizza().getState().getClass().getName().replaceAll("kpp.project.pizza.statuses.",""),cooker.getPizza().getName(),cooker.getPizza().getOrderId()));
+
                         synchronized (STATIC_VALUES.cookers) {
                             STATIC_VALUES.cookers.add(cooker);
                         }
