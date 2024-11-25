@@ -14,23 +14,15 @@ public class Packing implements IPizzaStatus {
         pizza.setState(new ReadyForPickUp());
         int orderId = pizza.getOrderId();
         List<Order> orders = Pizzeria.getInstance().getOrders();
-        if(orders.isEmpty()){
-            return;
-        }
         for (Order order : orders) {
-            if (order.getOrderID() == orderId) {
-                List<Pizza> pizzas = order.getPizzas();
-                List<Pizza> newPizzas = new ArrayList<>();
-                for (Pizza p : pizzas) {
-                    if (!p.getName().equals(pizza.getName())) {
-                        newPizzas.add(p);
-                    }
+            for(Pizza p : order.getPizzas()){
+                if(p.getOrderId() == orderId){
+                    order.getPizzas().remove(p);
+                    break;
                 }
-                if(newPizzas.size() == 0){
-                    orders.remove(order);
-                } else {
-                    order.setPizzas(newPizzas);
-                }
+            }
+            if(order.getPizzas().isEmpty()){
+                orders.remove(order);
                 break;
             }
         }
