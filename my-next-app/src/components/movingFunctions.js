@@ -49,7 +49,7 @@ let index = 0; // Статична змінна для відстеження з
               return resetCashiers;
             });
             console.log("moving to waiting station");
-            sendDataToKitchen(client.info);
+            //sendDataToKitchen(client.info);
             moveToWaitingStation(client);
           }, 3000); 
         });

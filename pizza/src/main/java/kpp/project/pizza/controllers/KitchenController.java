@@ -18,8 +18,8 @@ public class KitchenController {
     private final ObjectMapper objectMapper = new ObjectMapper();
     @PostMapping
     public Map<String, String> newOrder(@RequestBody Map<String, Object> requestData) {
-        Order order = objectMapper.convertValue(requestData.get("order"), Order.class);
-        System.out.println("New order: " + requestData.get("order"));
+        Order order = objectMapper.convertValue(requestData.get("data"), Order.class);
+        System.out.println("New order: " + requestData.get("data"));
         Pizzeria.getInstance().addOrder(order);
         Map<String, String> response = new HashMap<>();
         response.put("status", "OK");
