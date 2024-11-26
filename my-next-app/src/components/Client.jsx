@@ -1,4 +1,11 @@
 // Клас Client
+
+const images = [
+  "/simulation/images/Client.png",
+  "client.svg",
+  "client2.svg"
+];
+
 export default class Client {
   constructor(container, name, order, cashierID, info, x, y, orderId, clientOrder) {
     this.container = container;
@@ -6,7 +13,7 @@ export default class Client {
     this.order = order;
     this.cashierID = cashierID;
     this.info = info;
-    this.imageSrc = "/simulation/images/client.png";
+    this.imageSrc = images[Math.floor(Math.random() * images.length)];
     this.x = x;
     this.y = y;
     this.orderId = orderId;

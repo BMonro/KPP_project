@@ -1296,3 +1296,9 @@ Pizza Greek pizza (Order ID: 2) is now ReadyForPickUp 03:47:31
 Pizza Neapolitan pizza (Order ID: 1) is now ReadyForPickUp 03:47:36
 Pizza Greek pizza (Order ID: 1) is now Kneading 03:51:03
 Pizza Greek pizza (Order ID: 1) is now Preparing 03:51:09
+Pizza Greek pizza (Order ID: 2) is now Baking 11:00:56
+Pizza Greek pizza (Order ID: 3) is now Baking 11:00:56
+Pizza Greek pizza (Order ID: 4) is now Baking 11:00:56
+Pizza Greek pizza (Order ID: 2) is now Packing 11:01:02
+Pizza Greek pizza (Order ID: 3) is now Packing 11:01:02
+Pizza Greek pizza (Order ID: 4) is now Packing 11:01:02
