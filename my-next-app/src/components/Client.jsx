@@ -18,7 +18,7 @@ export default class Client {
     this.y = y;
     this.orderId = orderId;
     this.clientDiv = null; // Зберігаємо посилання на створений елемент
-    this.createClient();
+    // this.createClient();
     this.clientOrder = clientOrder
   }
 

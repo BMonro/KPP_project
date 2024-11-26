@@ -5,7 +5,7 @@ import Header from "@/components/SimulationHeader";
 import Client from "@/components/Client";
 
 import { sendDataToBackend} from "@/utils/sentData";
-import { moveToCookingStation, moveToExit } from "@/components/movingFunctions";
+import { moveToCashRegister, moveToCookingStation, moveToExit } from "@/components/movingFunctions";
 import { initializeCookersAndStations } from "@/components/cookersWork";
 import { initializeCashRegisters } from "@/components/CashRegisters";
 import { initializeCashiers } from "@/components/cashiersWork";
@@ -94,11 +94,7 @@ export default function Simulation() {
 
         setOrders((currentOrders) => {
             const existingIndex = currentOrders.findIndex(order => order.orderId === data.orderId);
-            // console.log(data.status);
-            // if(currentOrders[existingIndex]) {
-            //   console.log(currentOrders[existingIndex].status);
-            // }
-        
+
             let updatedOrders;
 
             if (existingIndex !== -1) {
@@ -113,7 +109,7 @@ export default function Simulation() {
                 updatedOrders = [data, ...currentOrders];
             }
 
-            console.log("Updated orders:", updatedOrders); // Тут ти побачиш новий стан
+            console.log("Updated orders:", updatedOrders); 
             return updatedOrders;
         });
         
@@ -197,18 +193,16 @@ useEffect(() => {
 }, [readyIds]);
 
   
-// function handlerDeleteOrder(orderToDelete) {
-//     setOrders((currentOrders) => {
-     
-//       return currentOrders.filter(order => order.orderId !== orderToDelete.orderId)
-      
-      
-//     }
-      
-        
-//     );
-    
-// }
+useEffect(() => {
+  if (clients.length > 0) {
+    const lastClient = clients[clients.length - 1];
+    lastClient.createClient();
+    moveToCashRegister(lastClient, lastClient.cashierID, setCashRegisters);
+    console.log("Новий клієнт доданий:", lastClient);
+  }
+}, [clients]);
+
+
 useMoveCookers(orders, setOrders, cookers, stages, isSended, setReadyIds)
 
   // Відкриття модального вікна

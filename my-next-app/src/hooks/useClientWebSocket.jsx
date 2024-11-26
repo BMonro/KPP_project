@@ -5,8 +5,8 @@ import { sendDataToKitchen } from "@/utils/sentData";
 // Форматування замовлення для клієнта
 const formatOrder = (clientOrder) => {
     let id = "";
-    for(let i = 0; i < clientOrder.pizzas.length; i++) {
-        id += clientOrder.pizzas[i].orderId+" ";
+    for (let i = 0; i < clientOrder.pizzas.length; i++) {
+        id += clientOrder.pizzas[i].orderId + " ";
     }
     return `
       ID: ${id}
@@ -30,45 +30,14 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
                 console.log(clientOrder.pizzas);
 
                 const cashierID = idCashier || "1";
-                const casaElement = document.querySelector(".casa-image");
-                if (!casaElement) {
-                    console.error("Casa element not found.");
-                    return;
-                }
+
 
                 if (clients.length >= 27) {
                     console.log("Максимальна кількість клієнтів досягнута.");
                     return;
                 }
 
-                const casaRect = casaElement.getBoundingClientRect();
-                const { x: clientX, y: clientY } = calculateClientPosition(casaRect, clients.length);
-
-                // Перевірка, чи клієнт з таким orderID вже є в списку
-                const existingClient = clients.find(client => String(client.orderID) === String(clientOrder.orderID));
-
-                if (!existingClient) {
-                    console.log(111111111)
-
-                    const newClient = new Client(
-                        document.getElementById("cooker-container"),
-                        `Client ${clientOrder.orderID}`,
-                        formatOrder(clientOrder),
-                        cashierID,
-                        data,
-                        clientX,
-                        clientY,
-                        clientOrder.orderID,
-
-                    );
-                    console.log(clientOrder.orderID);
-
-                    setClients((prevClients) => [...prevClients, newClient]); // Додаємо нового клієнта
-                    sendDataToKitchen(clientOrder);
-                    moveToCashRegister(newClient, cashierID, setCashRegisters);
-                } else {
-                    console.log(`Client with orderID ${clientOrder.orderID} already exists.`);
-                }
+                createClient(cashierID, data, clientOrder, clients, setClients, setCashRegisters)
 
             } catch (error) {
                 console.error("Помилка обробки повідомлення:", error);
@@ -87,6 +56,36 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
         // return () => socket.close(); // Можна додати для закриття WebSocket під час демонтажу компонента
     }, []); // Додаємо clients як залежність для перезапуску хука при зміні клієнтів
 };
+
+function createClient(cashierID, data, clientOrder, clients, setClients, setCashRegisters) {
+    const casaElement = document.querySelector(".casa-image");
+    if (!casaElement) {
+        console.error("Casa element not found.");
+        return;
+    }
+    const casaRect = casaElement.getBoundingClientRect();
+    const { x: clientX, y: clientY } = calculateClientPosition(casaRect, clients.length);
+
+    console.log("СТВОРИВСЯ КЛІЄНТ")
+    console.log(clients)
+    const newClient = new Client(
+        document.getElementById("cooker-container"),
+        `Client ${clientOrder.orderID}`,
+        formatOrder(clientOrder),
+        cashierID,
+        data,
+        clientX,
+        clientY,
+        clientOrder.orderID,
+
+
+    );
+
+    setClients((prevClients) => [...prevClients, newClient]); // Додаємо нового клієнта
+    sendDataToKitchen(clientOrder);
+    // moveToCashRegister(newClient, cashierID, setCashRegisters);
+
+}
 
 
 const calculateClientPosition = (casaRect, index) => {
