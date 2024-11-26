@@ -14,30 +14,74 @@ const Dialog = forwardRef(({ isDialogOpen, setIsDialogOpen, handleAddItem, curre
 
     const handleClickAdd = () => {
         let img;
-        if (currentType == "Pizzas") {
+
+        // Обрізаємо всі значення до 20 символів
+        const trimmedNameValue = nameValue?.trim().slice(0, 15);
+        const trimmedPriceValue = priceValue?.trim().slice(0, 15);
+        const trimmedTimeValue = timeValue?.trim().slice(0, 15);
+
+        // Перевірка довжини полів
+        if (
+            (nameValue && nameValue.trim().length > 15) ||
+            (priceValue && priceValue.trim().length > 15) ||
+            (timeValue && timeValue.trim().length > 15)
+        ) {
+            alert("Кожне поле має містити не більше 15 символів!");
+            return;
+        }
+
+        // Валідація cookingTime (лише цифри)
+        const isCookingTimeValid = /^[0-9]+$/.test(trimmedTimeValue);
+
+        // Валідація ціни (лише цифри)
+        const isPriceValid = /^[0-9]+$/.test(trimmedPriceValue);
+
+        if (currentType === "Pizzas") {
             img = pizza;
-            if (!nameValue || !priceValue || !timeValue) {
+
+            // Перевірка заповнення всіх полів для "Pizzas" та валідності даних
+            if (!trimmedNameValue || !trimmedPriceValue || !trimmedTimeValue) {
+                alert("Усі поля мають бути заповнені!");
                 return;
             }
-        }
-        else {
+
+            if (!isCookingTimeValid) {
+                alert("Час приготування має містити лише цифри!");
+                return;
+            }
+
+            if (!isPriceValid) {
+                alert("Ціна має містити лише цифри!");
+                return;
+            }
+        } else {
             img = soda;
-            if (!nameValue || !priceValue) {
+
+            // Перевірка заповнення полів для "Sodas" та валідності даних
+            if (!trimmedNameValue || !trimmedPriceValue) {
+                alert("Усі поля мають бути заповнені!");
+                return;
+            }
+
+            if (!isPriceValid) {
+                alert("Ціна має містити лише цифри!");
                 return;
             }
         }
 
+        // Створюємо новий елемент
         const item = {
-            name: nameValue,
-            cookingTime: timeValue,
-            price: priceValue,
+            name: trimmedNameValue,
+            cookingTime: trimmedTimeValue, // Залишаємо значення рядком
+            price: trimmedPriceValue,      // Залишаємо значення рядком
             img: img
-        }
-        handleAddItem(item)
-        closeDialog()
+        };
 
-
+        handleAddItem(item);
+        closeDialog();
     };
+
+
 
     const closeDialog = () => {
         setIsDialogOpen(false);
