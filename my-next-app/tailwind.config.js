@@ -7,6 +7,15 @@ module.exports = {
   ],
   theme: {
     extend: {
+      keyframes: {
+        'bounce-up-down': {
+          '0%, 100%': { transform: 'translateY(10px)' }, // Початкова та кінцева позиція
+          '50%': { transform: 'translateY(-10px)' }, // Рух вгору
+        },
+      },
+      animation: {
+        'bounce-up-down': 'bounce-up-down 2s ease-in-out infinite', // Анімація з постійним повторенням
+      },
       colors: {
         orange: "rgba(196, 96, 52, 1)",
         mainBg: 'rgba(255, 242, 235, 1)',
