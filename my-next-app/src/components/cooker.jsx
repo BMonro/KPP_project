@@ -1,5 +1,5 @@
 export default class Cooker {
-  constructor(container, name, x, y) {
+  constructor(container, name, x, y, move) {
     this.container = container;
     this.name = name;
     this.imageSrc = "/simulation/images/Cooker.png";
@@ -12,6 +12,7 @@ export default class Cooker {
     }
     this.isFree = true;
     this.status = null;
+    this.move = move;
     this.createCooker();
   }
 

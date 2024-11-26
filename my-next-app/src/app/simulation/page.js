@@ -5,7 +5,7 @@ import Header from "@/components/SimulationHeader";
 import Client from "@/components/Client";
 
 import { sendDataToBackend} from "@/utils/sentData";
-import { moveToCookingStation } from "@/components/movingFunctions";
+import { moveToCookingStation, moveToExit } from "@/components/movingFunctions";
 import { initializeCookersAndStations } from "@/components/cookersWork";
 import { initializeCashRegisters } from "@/components/CashRegisters";
 import { initializeCashiers } from "@/components/cashiersWork";
@@ -47,16 +47,20 @@ export default function Simulation() {
     const container = document.getElementById("cooker-container");
     const casaElement = document.querySelector(".casa-image");
     const tableElement = document.querySelector(".table-image");
-    console.log(Number(localStorage.getItem("choosedCooks")))
-    const countOfCooks = Number(localStorage.getItem("choosedCooks")) || 1;
 
+    const choosedCooks = localStorage.getItem("choosedCooks");
+    const countOfCooks = Number(JSON.parse(choosedCooks));
+
+    const choosedCashiers = localStorage.getItem("choosedCashRegisters");
+    const countOfCashiers = Number(JSON.parse(choosedCashiers));
+    
 
 
     if (container && casaElement && tableElement) {
       console.log("initial")
       casaElement.onload = () => initializeCashRegisters(casaElement, setCashRegisters);
       tableElement.onload = () => initializeCookersAndStations(tableElement, container, setCookers, setStages, countOfCooks);
-      casaElement.onload = () => initializeCashiers(casaElement, container, setCashRegisters);
+      casaElement.onload = () => initializeCashiers(casaElement, container, setCashRegisters, countOfCashiers);
       hasInitPlace.current = true;
       
 
@@ -72,6 +76,8 @@ export default function Simulation() {
 
 
   useClientWebSocket(clients, setClients, setCashRegisters);
+
+
   useEffect(() => {
     const socket = new WebSocket("ws://localhost:8080/new/state");  // Використовуємо шлях /new/state
 
@@ -87,10 +93,10 @@ export default function Simulation() {
 
         setOrders((currentOrders) => {
             const existingIndex = currentOrders.findIndex(order => order.orderId === data.orderId);
-            console.log(data.status);
-            if(currentOrders[existingIndex]) {
-              console.log(currentOrders[existingIndex].status);
-            }
+            // console.log(data.status);
+            // if(currentOrders[existingIndex]) {
+            //   console.log(currentOrders[existingIndex].status);
+            // }
         
             let updatedOrders;
 
@@ -132,10 +138,26 @@ export default function Simulation() {
 
 useEffect(() => {
   console.log("Orders after update:", orders);
+  console.log(clients)
+
+  for(const client of clients) {
+    console.log(client)
+    console.log(client.orderId)
+    
+    const selectedClient = orders.find(order => 
+      order.orderId === client.orderId && order.status === "ReadyForPickUp"
+    );
+
+    if (selectedClient) {
+      console.log("додому")
+      moveToExit(client);
+      break;
+    } 
+    
+  }
 }, [orders]);
 
 
-  
   
 // function handlerDeleteOrder(orderToDelete) {
 //     setOrders((currentOrders) => {
@@ -160,9 +182,7 @@ useMoveCookers(orders, setOrders, cookers, stages, isSended)
 
   return (
     <div className="h-screen overflow-hidden">
-    <button onClick={testF} >
-            test button
-            </button>
+
       <Header />
       <div className="h-full overflow-x-scroll">
         <div className="simulation-background" id="cooker-container">

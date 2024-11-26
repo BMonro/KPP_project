@@ -23,7 +23,7 @@ export const initializeCookersAndStations = (tableElement, container, setCookers
       const newCookers = Array.from({ length: countOfCooks }, (_, i) => {
           const cookerX = tableX + i * tableWidth * 0.09;
           const cookerY = tableY + tableHeight * 0.3;
-          return new Cooker(container, `Chef ${i + 1}`, cookerX, cookerY);
+          return new Cooker(container, `Chef ${i + 1}`, cookerX, cookerY, i * 50);
       });
       setCookers(newCookers);
     };

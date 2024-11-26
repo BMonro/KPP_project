@@ -18,7 +18,7 @@ let index = 0; // Статична змінна для відстеження з
       console.log(`Moving ${cooker.name} to ${station.name}...`);
     
       // Передаємо назву станції для зміни зображення
-      cooker.moveTo(station.x, station.y, station.name, () => {
+      cooker.moveTo(station.x + cooker.move, station.y, station.name, () => {
         // console.log(`${cooker.name} reached ${station.name}.`);
     
         // Після досягнення станції робимо її знову вільною
@@ -94,7 +94,10 @@ let index = 0; // Статична змінна для відстеження з
         console.log(`${client.name} has exited the pizzeria.`);
     
         setTimeout(() => {
-          client.element.remove(); // Видаляємо елемент з DOM
+          if(client.element) {
+            client.element.remove();   // Видаляємо елемент з DOM
+          }
+       
         }, 500); // Невелика затримка для анімації зникнення
       });
     }

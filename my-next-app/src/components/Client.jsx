@@ -1,6 +1,6 @@
 // Клас Client
 export default class Client {
-  constructor(container, name, order, cashierID, info, x, y) {
+  constructor(container, name, order, cashierID, info, x, y, orderId, clientOrder) {
     this.container = container;
     this.name = name;
     this.order = order;
@@ -9,8 +9,10 @@ export default class Client {
     this.imageSrc = "/simulation/images/client.png";
     this.x = x;
     this.y = y;
+    this.orderId = orderId;
     this.clientDiv = null; // Зберігаємо посилання на створений елемент
     this.createClient();
+    this.clientOrder = clientOrder
   }
 
   // Створення клієнта
