@@ -184,7 +184,7 @@ useMoveCookers(orders, setOrders, cookers, stages, isSended, setReadyIds)
   // Відкриття модального вікна
   const handleTableClick = () => {
     setIsModalOpen(true)
-    fetchOrders(setOrdersForModal);
+    // fetchOrders(setOrdersForModal);
   };
   const closeModal = () => setIsModalOpen(false);
 
@@ -212,8 +212,8 @@ useMoveCookers(orders, setOrders, cookers, stages, isSended, setReadyIds)
             <h2>Список замовлень</h2>
             <div className="order-list">
               {/* Відображаємо замовлення, якщо є дані */}
-              {ordersForModal.length > 0 ? (
-                ordersForModal.map((order) => (
+              {orders.length > 0 ? (
+                orders.map((order) => (
                   <div key={order.id} className="order-item">
                     <div className="order-id">ID: {order.orderId}</div>
                     <div className="pizza-name">Pizza: {order.nameOfPizza}</div>
