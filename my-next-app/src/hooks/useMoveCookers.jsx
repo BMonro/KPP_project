@@ -5,7 +5,7 @@ import { sendDataToKitchen } from "@/utils/sentData";
 import { moveToCookingStation } from "@/components/movingFunctions";
 
 
-const useMoveCookers = (orders, setOrders, cookers, stages, isSended) => {
+const useMoveCookers = (orders, setOrders, cookers, stages, isSended, setReadyIds) => {
     const ordersRef = useRef(orders);
 
     useEffect(() => {
@@ -54,9 +54,16 @@ const useMoveCookers = (orders, setOrders, cookers, stages, isSended) => {
                         else {
                             moveToCookingStation(cooker, stages[4].name, stages);
                             // console.log("кінець ордера:", order);
+                            setReadyIds((currentReadyIds) => {
+                                return [...currentReadyIds, order.orderId];
+                            });
+                            setOrders((currentOrders) => {
+                                return currentOrders.filter((currentOrder) => currentOrder.orderId !== order.orderId);
+                            }); 
                             cooker.isFree = true;
                             cooker.status = null;
                             cooker.selectedOrder = null;
+
                             // handlerDeleteOrder(order)
                             break;
                         }

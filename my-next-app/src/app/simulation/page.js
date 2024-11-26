@@ -18,6 +18,7 @@ export default function Simulation() {
 
   // Стани для клієнтів та інших елементів
   const [orders, setOrders] = useState([]); // Create a new state for storing orders
+  const [readyIds, setReadyIds] = useState([]);
   const [clients, setClients] = useState([]);
   const [cashRegisters, setCashRegisters] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -146,8 +147,8 @@ useEffect(() => {
     
     const selectedClient = orders.find(order => 
       order.orderId === client.orderId && order.status === "ReadyForPickUp"
+      
     );
-
     if (selectedClient) {
       console.log("додому")
       moveToExit(client);
@@ -156,7 +157,14 @@ useEffect(() => {
     
   }
 }, [orders]);
-
+useEffect(() => {
+  for(const id of readyIds) {
+    const selectedClient = clients.find(client => client.orderId === id);
+    if (selectedClient) {
+      moveToExit(selectedClient);
+    }
+  }
+}, [readyIds]);
 
   
 // function handlerDeleteOrder(orderToDelete) {
@@ -171,7 +179,7 @@ useEffect(() => {
 //     );
     
 // }
-useMoveCookers(orders, setOrders, cookers, stages, isSended)
+useMoveCookers(orders, setOrders, cookers, stages, isSended, setReadyIds)
 
   // Відкриття модального вікна
   const handleTableClick = () => {
