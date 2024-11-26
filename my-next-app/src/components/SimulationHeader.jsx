@@ -11,16 +11,16 @@ export default function Header() {
 
             {/* Праворуч кнопки */}
             <div className="flex items-center gap-4">
-                {/* Кнопка Пауза */}
-                <button>
-                    <Image 
-                        src="/simulation/images/SymbolPause.png" 
-                        alt="Pause Button" 
-                        width={30} 
-                        height={30} 
-                        className="cursor-pointer"
-                    />
-                </button>
+        {/* Кнопка Пауза
+        <button>
+            <Image 
+                src="/simulation/images/SymbolPause.png" 
+                alt="Pause Button" 
+                width={30} 
+                height={30} 
+                className="cursor-pointer"
+            />
+        </button> */}
 
                 {/* Кнопка Вихід */}
                 <Link href="/">

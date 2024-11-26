@@ -27,7 +27,7 @@ export default function Simulation() {
   const hasSentData = useRef(false); 
   const hasInitPlace = useRef(false); 
   const [ordersForModal, setOrdersForModal] = useState([]);
-
+  
   const [isSended, setIsSended] = useState(true);
 
   useEffect(() => {
@@ -159,6 +159,36 @@ useEffect(() => {
 }, [orders]);
 useEffect(() => {
   for(const id of readyIds) {
+    console.log("HELLOOOOOOOOOOOOO ");
+    console.log(clients);
+    for(const client of clients) {
+      let order = client.order;
+      const matches = order.match(/ID:\s*(\d+(?:\s+\d+)*)/);
+
+      if (matches) {
+        // Розбиваємо на окремі числа після "ID:"
+        let ids = matches[1].trim().split(/\s+/); // Розбиваємо по пробілах
+        console.log(ids); // Це масив з чисел
+
+        // Перевіряємо чи є співпадіння з готовими ID
+        if (ids.includes(id)) {
+          // Видаляємо співпадаюче ID з масиву
+          ids = ids.filter(item => item !== id);
+          console.log('Оновлені ID:', ids);
+
+          // Оновлюємо рядок з новими ID
+          const updatedOrder = `ID: ${ids.join(' ')}`; // Об'єднуємо залишкові ID назад в рядок
+          client.order = updatedOrder; // Оновлюємо клієнта з новим рядком
+          
+          // Якщо список ID порожній, можна видалити рядок
+          if (ids.length === 0) {
+            clients.splice(clients.indexOf(client), 1);
+          }
+          
+          moveToExit(client);
+        }
+      }
+    }
     const selectedClient = clients.find(client => client.orderId === id);
     if (selectedClient) {
       moveToExit(selectedClient);

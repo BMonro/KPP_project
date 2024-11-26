@@ -4,8 +4,12 @@ import Client from "@/components/Client";
 import { sendDataToKitchen } from "@/utils/sentData";
 // Форматування замовлення для клієнта
 const formatOrder = (clientOrder) => {
+    let id = "";
+    for(let i = 0; i < clientOrder.pizzas.length; i++) {
+        id += clientOrder.pizzas[i].orderId+" ";
+    }
     return `
-      ID: ${clientOrder.orderID}
+      ID: ${id}
       Pizzas: ${clientOrder.pizzas.map((pizza) => `"${pizza.name}"`).join(", ")}
       Drinks: ${clientOrder.drinks.map((drink) => `"${drink.name}"`).join(", ")}
     `.trim();
@@ -23,8 +27,7 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
             try {
                 const data = JSON.parse(event.data);
                 const { order: clientOrder, idCashier } = data;
-
-                console.log(clientOrder.orderID);
+                console.log(clientOrder.pizzas);
 
                 const cashierID = idCashier || "1";
                 const casaElement = document.querySelector(".casa-image");
@@ -46,6 +49,7 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
 
                 if (!existingClient) {
                     console.log(111111111)
+
                     const newClient = new Client(
                         document.getElementById("cooker-container"),
                         `Client ${clientOrder.orderID}`,
@@ -54,7 +58,8 @@ const useClientWebSocket = (clients, setClients, setCashRegisters) => {
                         data,
                         clientX,
                         clientY,
-                        clientOrder.orderID
+                        clientOrder.orderID,
+
                     );
                     console.log(clientOrder.orderID);
 
