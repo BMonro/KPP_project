@@ -154,9 +154,10 @@ useEffect(() => {
   }
 }, [orders]);
 useEffect(() => {
-  for(const id of readyIds) {
+  for(const idd of readyIds) {
     console.log("HELLOOOOOOOOOOOOO ");
-    console.log(clients);
+    console.log(idd);
+    let id = ''+idd;
     for(const client of clients) {
       let order = client.order;
       const matches = order.match(/ID:\s*(\d+(?:\s+\d+)*)/);
@@ -164,9 +165,6 @@ useEffect(() => {
       if (matches) {
         // Розбиваємо на окремі числа після "ID:"
         let ids = matches[1].trim().split(/\s+/); // Розбиваємо по пробілах
-        console.log(ids); // Це масив з чисел
-
-        // Перевіряємо чи є співпадіння з готовими ID
         if (ids.includes(id)) {
           // Видаляємо співпадаюче ID з масиву
           ids = ids.filter(item => item !== id);
@@ -178,16 +176,15 @@ useEffect(() => {
           
           // Якщо список ID порожній, можна видалити рядок
           if (ids.length === 0) {
-            clients.splice(clients.indexOf(client), 1);
+            console.log('Видалення рядка');
+            moveToExit(client);
+            console.log(clients);
+            //clients.splice(clients.indexOf(client), 1);
           }
           
-          moveToExit(client);
+          
         }
       }
-    }
-    const selectedClient = clients.find(client => client.orderId === id);
-    if (selectedClient) {
-      moveToExit(selectedClient);
     }
   }
 }, [readyIds]);

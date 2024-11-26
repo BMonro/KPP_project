@@ -81,6 +81,7 @@ let index = 0; // Статична змінна для відстеження з
     }
 
     export function moveToExit(client) {
+      console.log(`${client.name} is exiting the pizzeria...`);
       // Визначаємо розміри екрана для правого нижнього кута
       const screenWidth = window.innerWidth;
       const screenHeight = window.innerHeight;
@@ -88,7 +89,7 @@ let index = 0; // Статична змінна для відстеження з
       // Розраховуємо координати правого нижнього кута
       const exitX = screenWidth - 20; // Відступ 20 пікселів від правого краю
       const exitY = screenHeight - 20; // Відступ 20 пікселів від нижнього краю
-    
+      console.log(exitX, exitY);
       // Переміщуємо клієнта до цієї точки
       client.moveTo(exitX, exitY, () => {
         console.log(`${client.name} has exited the pizzeria.`);

@@ -29,7 +29,9 @@ public class Pizza implements Cloneable, Serializable {
 
     // Поле для зберігання стану
     private IPizzaStatus state;
-    public Pizza(){}
+    public Pizza(){
+        this.orderId = ++numberOfPizzas;
+    }
     public Pizza(String name, String size, double price, int cookingTime, int orderId) {
         this.name = name;
         this.size = size;
@@ -136,6 +138,7 @@ public class Pizza implements Cloneable, Serializable {
                 ", price=" + price +
                 ", state=" + (state != null ? state.toString() : "N/A") +
                 ", cookingTime=" + cookingTime +
+                ", OrderId=" + orderId +
                 '}';
     }
 }

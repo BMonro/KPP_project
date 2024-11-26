@@ -121,8 +121,9 @@ public class Kitchen  extends Thread{
             if (!STATIC_VALUES.cookers.isEmpty() && !pizzas.isEmpty()) {
                 Cooker cooker = STATIC_VALUES.cookers.get(0);
                 STATIC_VALUES.cookers.remove(cooker);
-                // System.out.println(pizzas);
+
                 Pizza pizzaFromQueue = pizzas.poll();
+                System.out.println(pizzaFromQueue);
                 cooker.setPizza(pizzaFromQueue);
 
                 int timeToCook = pizzaFromQueue.getCookingTime();
